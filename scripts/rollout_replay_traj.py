@@ -347,6 +347,35 @@ if __name__ == "__main__":
             videos_cat, true_videos, video_dict_pred, predicted_latents = Agent.forward_wm(action_cond, video_latent_true, current_latent, his_cond=his_cond_input,text=text_i if Agent.args.text_cond else None)
 
             print("################ record information ################")
+
+            # Save aligned ground-truth and predicted frames for offline evaluation
+            eval_dir = os.path.join(
+                args.save_dir,
+                args.task_name,
+                "evaluation_data",
+                f"trajectory_{val_id_i}"
+            )
+
+            os.makedirs(eval_dir, exist_ok=True)
+
+            eval_path = os.path.join(
+                eval_dir,
+                f"interaction_{i:03d}_start_{start_idx_i + start_id}.npz"
+            )
+
+            np.savez_compressed(
+                eval_path,
+                ground_truth=true_videos,
+                prediction=video_dict_pred,
+                trajectory_id=str(val_id_i),
+                interaction_index=int(i),
+                start_frame_index=int(start_idx_i + start_id),
+                instruction=str(instruction),
+                fps=int(args.fps)
+            )
+
+            print(f"Saved evaluation frames to {eval_path}")
+
             # push current step to history buffer
             his_eef.append(cartesian_pose[pred_step-1:pred_step]) #(1,7)
             his_cond.append(torch.cat([v[pred_step-1] for v in predicted_latents], dim=1).unsqueeze(0))  # (1, 4, 72, 40)

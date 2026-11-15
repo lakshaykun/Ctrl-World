@@ -37,3 +37,6 @@ sentencepiece>=0.2.0
 protobuf>=4.25.0
 requests>=2.31.0
 PyYAML>=6.0
+
+# Evaluation
+scikit-image-0.26.0
