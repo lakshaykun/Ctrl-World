@@ -81,6 +81,8 @@ We provide a very small subset of DROID dataset in `dataset_example/droid_subset
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj.py  --dataset_root_path dataset_example --dataset_meta_info_path dataset_meta_info --dataset_names droid_subset --svd_model_path ${path to svd folder} --clip_model_path ${path to clip folder} --ckpt_path ${path to ctrl-world ckpt}
+
+CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj.py  --dataset_root_path dataset_example --dataset_meta_info_path dataset_meta_info --dataset_names droid_subset --svd_model_path checkpoints/svd --clip_model_path checkpoints/clip --ckpt_path checkpoints/ctrl-world/checkpoint-10000.pt
 ```
 The rollout configuration can be found in `config.py` in function `__post_init__`.
 If you want to replay more trajectories, you need to download and process the original DROID datasets following the instructions in training section.
