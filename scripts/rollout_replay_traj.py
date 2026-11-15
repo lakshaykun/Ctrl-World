@@ -61,10 +61,48 @@ class agent():
 
         # load ctrl-world model        
         self.model = CrtlWorld(args)
-        self.model.load_state_dict(torch.load(args.val_model_path))
-        self.model.to(self.accelerator.device).to(self.dtype)
+
+        print("Loading Ctrl-World checkpoint using memory mapping...")
+
+        state_dict = torch.load(
+            args.val_model_path,
+            map_location="cpu",
+            weights_only=True,
+            mmap=True
+        )
+
+        self.model.load_state_dict(
+            state_dict,
+            strict=True,
+            assign=True
+        )
+
+        del state_dict
+
+        print("Moving model to GPU and converting dtype...")
+
+        self.model.to(
+            device=self.accelerator.device,
+            dtype=self.dtype
+        )
+
         self.model.eval()
+
         print("load world model success")
+
+        print("\n========== MEMORY CHECK ==========")
+
+        print("GPU allocated:",
+            round(torch.cuda.memory_allocated() / 1024**3, 2), "GB")
+
+        print("GPU reserved:",
+            round(torch.cuda.memory_reserved() / 1024**3, 2), "GB")
+
+        print("Model dtype:", next(self.model.parameters()).dtype)
+        print("Model device:", next(self.model.parameters()).device)
+
+        print("=================================\n")
+        
         with open(f"{args.data_stat_path}", 'r') as f:
             data_stat = json.load(f)
             self.state_p01 = np.array(data_stat['state_01'])[None,:]
