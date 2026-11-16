@@ -102,11 +102,37 @@ class wm_args:
 
         # Configure per-task eval sets
         if self.task_type == "replay":
-            self.val_dataset_dir = "dataset_example/droid_subset"
-            self.val_id = ["899", "18599","199",]
-            self.start_idx = [8, 14, 8] * len(self.val_id)
-            self.instruction = [""] * len(self.val_id)
             self.task_name = "Rollouts_replay"
+
+            # Dataset name -> directory
+            replay_datasets = {
+                "droid_subset": "dataset_example/droid_subset",
+                "droid_new_setup": "dataset_example/droid_new_setup",
+                "droid_benchmark_v1": "droid_benchmark_v1",
+            }
+
+            if self.dataset_names not in replay_datasets:
+                raise ValueError(
+                    f"Unknown replay dataset: {self.dataset_names}. "
+                    f"Available: {list(replay_datasets.keys())}"
+                )
+
+            self.val_dataset_dir = replay_datasets[self.dataset_names]
+
+            annotation_dir = os.path.join(
+                self.val_dataset_dir, "annotation", "val"
+            )
+
+            self.val_id = sorted(
+                os.path.splitext(f)[0]
+                for f in os.listdir(annotation_dir)
+                if f.endswith(".json")
+            )
+
+            self.start_idx = [0] * len(self.val_id)
+            self.instruction = [""] * len(self.val_id)
+
+            self.task_name = f"Rollouts_replay_{self.dataset_names}"
 
         elif self.task_type == "keyboard":
             self.val_dataset_dir = "dataset_example/droid_subset"

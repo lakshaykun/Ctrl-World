@@ -129,10 +129,13 @@ class agent():
         annotation_path = f"{val_dataset_dir}/annotation/val/{id}.json"
         with open(annotation_path) as f:
             anno = json.load(f)
-            try:
-                length = len(anno['action'])
-            except:
-                length = anno["video_length"]
+
+            # try:
+            #     length = len(anno['action'])
+            # except:
+            #     length = anno["video_length"]
+            length = int(anno["video_length"])
+            
         frames_ids = np.arange(start_idx, start_idx + num_frames * skip, skip)
         max_ids = np.ones_like(frames_ids) * (length - 1)
         frames_ids = np.min([frames_ids, max_ids], axis=0).astype(int)
@@ -268,7 +271,10 @@ if __name__ == "__main__":
     parser.add_argument('--task_type', type=str, default='replay')
     args_new = parser.parse_args()
 
-    args = wm_args(task_type=args_new.task_type)
+    args = wm_args(
+            task_type=args_new.task_type,
+            dataset_names=args_new.dataset_names or "droid_subset"
+    )
 
     def merge_args(args, new_args):
         for k, v in new_args.__dict__.items():
