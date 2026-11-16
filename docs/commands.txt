@@ -10,3 +10,13 @@ CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj.py \
   --svd_model_path checkpoints/svd \
   --clip_model_path checkpoints/clip \
   --ckpt_path checkpoints/ctrl-world/checkpoint-10000.pt
+
+CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_video_metrics.py \
+  --data_dir synthetic_traj/Rollouts_replay_droid_benchmark_v1/evaluation_data \
+  --output_root evaluation_results \
+  --metrics psnr ssim lpips fid fvd \
+  --device cuda \
+  --lpips_batch_size 32 \
+  --fid_batch_size 64 \
+  --ssim_workers 4 \
+  --profile
