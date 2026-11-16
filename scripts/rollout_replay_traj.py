@@ -176,8 +176,7 @@ class agent():
     
             video_latent.append(x)
 
-        
-        return car_action, joint_pos, video_dict, video_latent, instruction
+        return car_action, joint_pos, video_dict, video_latent, instruction, frames_ids
 
     def forward_wm(self, action_cond, video_latent_true, video_latent_cond, his_cond=None, text=None):
         args = self.args
@@ -290,7 +289,13 @@ if __name__ == "__main__":
 
     for val_id_i, text_i, start_idx_i in zip(args.val_id, args.instruction, args.start_idx):
         # read ground truth trajectory informations
-        eef_gt, joint_pos_gt, video_dict, video_latents, instruction = Agent.get_traj_info(val_id_i, start_idx=start_idx_i, steps=int(pred_step*interact_num+8))
+        eef_gt, joint_pos_gt, video_dict, video_latents, instruction, trajectory_frame_ids = \
+            Agent.get_traj_info(
+                val_id_i,
+                start_idx=start_idx_i,
+                steps=int(pred_step * interact_num + 8)
+            )
+        
         text_i = instruction
         print("text_i:",instruction, "eef pose at t=0", eef_gt[0], "joint at t=0", joint_pos_gt[0])
 
@@ -371,7 +376,8 @@ if __name__ == "__main__":
                 interaction_index=int(i),
                 start_frame_index=int(start_idx_i + start_id),
                 instruction=str(instruction),
-                fps=int(args.fps)
+                fps=int(args.fps),
+                frame_indices=trajectory_frame_ids[start_id:end_id]
             )
 
             print(f"Saved evaluation frames to {eval_path}")
