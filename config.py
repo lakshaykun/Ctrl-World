@@ -14,9 +14,8 @@ class wm_args:
     pi_ckpt = '/cephfs/shared/llm/openpi/openpi-assets-preview/checkpoints/pi05_droid'
 
     # dataset parameters
-    # raw data
-    dataset_root_path = "dataset_example"
-    dataset_names = 'droid_subset'
+    dataset_root_path: str = "dataset_example"
+    dataset_names: str = "droid_subset"
     # meta info
     dataset_meta_info_path = 'dataset_meta_info' #'/cephfs/cjyyj/code/video_evaluation/exp_cfg'#'dataset_meta_info'
     dataset_cfgs = dataset_names
@@ -106,8 +105,12 @@ class wm_args:
 
             # Dataset name -> directory
             replay_datasets = {
-                "droid_subset": "dataset_example/droid_subset",
-                "droid_new_setup": "dataset_example/droid_new_setup",
+                "droid_subset": os.path.join(
+                    self.dataset_root_path, "droid_subset"
+                ),
+                "droid_new_setup": os.path.join(
+                    self.dataset_root_path, "droid_new_setup"
+                ),
                 "droid_benchmark_v1": "droid_benchmark_v1",
             }
 

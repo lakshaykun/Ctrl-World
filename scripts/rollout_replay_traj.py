@@ -135,7 +135,7 @@ class agent():
             # except:
             #     length = anno["video_length"]
             length = int(anno["video_length"])
-            
+
         frames_ids = np.arange(start_idx, start_idx + num_frames * skip, skip)
         max_ids = np.ones_like(frames_ids) * (length - 1)
         frames_ids = np.min([frames_ids, max_ids], axis=0).astype(int)
@@ -272,8 +272,9 @@ if __name__ == "__main__":
     args_new = parser.parse_args()
 
     args = wm_args(
-            task_type=args_new.task_type,
-            dataset_names=args_new.dataset_names or "droid_subset"
+        task_type=args_new.task_type,
+        dataset_names=args_new.dataset_names or "droid_subset",
+        dataset_root_path=args_new.dataset_root_path or "dataset_example"
     )
 
     def merge_args(args, new_args):
