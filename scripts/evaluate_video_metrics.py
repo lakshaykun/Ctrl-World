@@ -178,33 +178,6 @@ def paired_metrics(records, requested, device, lpips_net, data_range):
     return rows
 
 
-def get_torchmetrics(device, need_fid, need_fvd):
-    try:
-        import torch
-        from torchmetrics.image.fid import FrechetInceptionDistance
-    except Exception as e:
-        if need_fid:
-            raise RuntimeError(
-                "FID requires torchmetrics and torch-fidelity. Install: "
-                "`pip install torchmetrics torch-fidelity`. "
-                f"Original error: {e}"
-            )
-        torch = None
-        FrechetInceptionDistance = None
-    FVD = None
-    if need_fvd:
-        try:
-            from torchmetrics.video.fvd import FrechetVideoDistance
-            FVD = FrechetVideoDistance
-        except Exception as e:
-            raise RuntimeError(
-                "FVD requires a TorchMetrics build with video FVD support and "
-                "its video dependencies. Try `pip install torchmetrics "
-                "torch-fidelity pytorchvideo`. "
-                f"Original error: {e}"
-            )
-    return torch, FrechetInceptionDistance, FVD
-
 
 def compute_fid(records, device):
     import torch
@@ -263,22 +236,42 @@ def build_trajectory_videos(records, clip_len, stride, max_clips):
     return real_clips, fake_clips, clip_sources
 
 
+
 def compute_fvd(real_clips, fake_clips, device):
-    import torch
-    from torchmetrics.video.fvd import FrechetVideoDistance
-    if len(real_clips) < 2:
-        raise RuntimeError(
-            f"FVD needs at least 2 video clips; only {len(real_clips)} were formed. "
-            "Collect longer/more trajectories or reduce --fvd_clip_len (the standard "
-            "I3D FVD protocol commonly uses 16 frames)."
+    """
+    Compute FVD using cd-fvd with the I3D backbone.
+    Input clips: (B, T, H, W, C), uint8.
+    """
+    from cdfvd import fvd
+
+    real_array = np.ascontiguousarray(
+        np.stack(real_clips), dtype=np.uint8
+    )
+    fake_array = np.ascontiguousarray(
+        np.stack(fake_clips), dtype=np.uint8
+    )
+
+    if real_array.shape != fake_array.shape:
+        raise ValueError(
+            f"Real/fake shapes differ: "
+            f"{real_array.shape} vs {fake_array.shape}"
         )
-    metric = FrechetVideoDistance(feature="i3d", normalize=False).to(device)
-    for clips, real in ((real_clips, True), (fake_clips, False)):
-        # TorchMetrics FVD input: N,T,C,H,W, uint8 in [0,255].
-        x = np.stack(clips)
-        t = torch.from_numpy(x).permute(0, 1, 4, 2, 3).to(device=device, dtype=torch.uint8)
-        metric.update(t, real=real)
-    return float(metric.compute().item())
+
+    evaluator = fvd.cdfvd(
+        model="i3d",
+        n_real="full",
+        n_fake=len(fake_array),
+        device=device,
+        half_precision=False,
+    )
+
+    score = evaluator.compute_fvd(
+        real_videos=real_array,
+        fake_videos=fake_array,
+    )
+
+    return float(score)
+
 
 
 def write_csv(path, rows):
@@ -324,18 +317,37 @@ def main():
     }
 
     for key in ("psnr", "ssim", "lpips"):
-        if key in requested:
-            vals = []
-            for r in frame_rows:
-                if key in r:
-                    # Interaction means are weighted by frame-pair count below.
-                    vals.extend([r[key]] * int(r["num_frame_pairs"]))
-            if vals:
-                summary["paired_metrics"][key] = {
-                    "mean": float(np.mean(vals)),
-                    "std": float(np.std(vals)),
-                    "n_frame_pairs": len(vals),
-                }
+        if key not in requested:
+            continue
+
+        total_n = 0
+        total_sum = 0.0
+        total_sum_sq = 0.0
+
+        for row in frame_rows:
+            if key not in row:
+                continue
+
+            n = int(row["num_frame_pairs"])
+            mean = float(row[key])
+            std = float(row[key + "_std"])
+
+            total_n += n
+            total_sum += n * mean
+            total_sum_sq += n * (std**2 + mean**2)
+
+        if total_n:
+            overall_mean = total_sum / total_n
+            overall_variance = max(
+                0.0,
+                total_sum_sq / total_n - overall_mean**2
+            )
+
+            summary["paired_metrics"][key] = {
+                "mean": overall_mean,
+                "std": overall_variance**0.5,
+                "n_frame_pairs": total_n
+            }
 
     if "fid" in requested:
         fid, nframes = compute_fid(records, args.device)
