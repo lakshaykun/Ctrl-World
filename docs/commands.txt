@@ -1,3 +1,5 @@
+sudo apt install ffmpeg
+
 CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj.py  --dataset_root_path dataset_example --dataset_meta_info_path dataset_meta_info --dataset_names droid_subset --svd_model_path checkpoints/svd --clip_model_path checkpoints/clip --ckpt_path checkpoints/ctrl-world/checkpoint-10000.pt
 
 python scripts/evaluate_video_metrics.py   --data_dir synthetic_traj/Rollouts_replay/evaluation_data   --output_root evaluation_results   --metrics psnr ssim lpips fid fvd   --device cuda
