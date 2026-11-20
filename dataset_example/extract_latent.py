@@ -185,9 +185,9 @@ class EncodeLatentDataset(Dataset):
                 x = x.to(device)
                 latent_batches = []
                 with torch.inference_mode():
-                    for start in range(0, len(x), 64):
+                    for start in range(0, len(x), 128):
                         latent = (
-                            self.vae.encode(x[start:start + 64])
+                            self.vae.encode(x[start:start + 128])
                             .latent_dist.sample()
                             .mul_(self.vae.config.scaling_factor)
                             .cpu()
