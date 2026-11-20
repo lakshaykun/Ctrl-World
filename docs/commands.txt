@@ -22,3 +22,18 @@ CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_video_metrics.py \
   --fid_batch_size 64 \
   --ssim_workers 4 \
   --profile
+
+
+accelerate launch dataset_example/extract_latent.py \
+  --droid_hf_path data/droid_1.0.1 \
+  --droid_output_path dataset_example/droid \
+  --svd_path checkpoints/svd \
+  --split val
+
+python dataset_meta_info/create_meta_info.py \
+  --droid_output_path dataset_example/droid \
+  --dataset_name droid \
+  --split val
+
+git fetch --all
+git reset --hard origin/main
