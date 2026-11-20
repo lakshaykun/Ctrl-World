@@ -105,6 +105,7 @@ class wm_args:
 
             # Dataset name -> directory
             replay_datasets = {
+                "droid": os.path.join(self.dataset_root_path, "droid"),
                 "droid_subset": os.path.join(
                     self.dataset_root_path, "droid_subset"
                 ),
