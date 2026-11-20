@@ -18,13 +18,15 @@ from models.ctrl_world import CrtlWorld
 
 
 def _decode_one_camera(video_path, length, frames_ids):
-    """Decode one camera stream. Each worker owns its own VideoReader."""
+    """Decode only the required frames from one camera stream."""
     vr = VideoReader(video_path, ctx=cpu(0), num_threads=2)
+
     try:
-        frames = vr.get_batch(range(length)).asnumpy()
+        frames = vr.get_batch(frames_ids.tolist()).asnumpy()
     except AttributeError:
-        frames = vr.get_batch(range(length)).numpy()
-    return frames[frames_ids]
+        frames = vr.get_batch(frames_ids.tolist()).numpy()
+
+    return frames
 
 
 def _atomic_torch_save(obj, path):
@@ -37,7 +39,7 @@ def _atomic_torch_save(obj, path):
 def _atomic_npz_save(path, **arrays):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp_path = path + ".tmp.npz"
-    np.savez_compressed(tmp_path, **arrays)
+    np.savez(tmp_path, **arrays)
     os.replace(tmp_path, path)
 
 
