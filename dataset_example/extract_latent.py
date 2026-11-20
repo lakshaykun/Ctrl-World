@@ -14,7 +14,7 @@ from accelerate import Accelerator
 
 
 class EncodeLatentDataset(Dataset): 
-    def __init__(self, old_path, new_path, svd_path, device, size=(192, 320), rgb_skip=3):
+    def __init__(self, old_path, new_path, svd_path, device, size=(192, 320), rgb_skip=3, split="all"):
         self.old_path = old_path
         self.new_path = new_path
         self.size = size
@@ -29,6 +29,23 @@ class EncodeLatentDataset(Dataset):
             return data
 
         self.data = load_json_file(f'{old_path}/meta/episodes.jsonl')
+
+        if split != "all":
+            if split not in ("train", "val"):
+                raise ValueError(f"Invalid split: {split}")
+
+            if split == "val":
+                self.data = [
+                    traj for traj in self.data
+                    if traj["episode_index"] % 100 == 99
+                ]
+            else:
+                self.data = [
+                    traj for traj in self.data
+                    if traj["episode_index"] % 100 != 99
+                ]
+
+        print(f"Selected {len(self.data)} episodes for split={split}")
 
     def __len__(self):
         return len(self.data)
@@ -162,6 +179,12 @@ if __name__ == "__main__":
     parser.add_argument('--svd_path', type=str, default='/cephfs/shared/llm/stable-video-diffusion-img2vid')
     # debug
     parser.add_argument('--debug', action='store_true')
+    parser.add_argument(
+        "--split",
+        choices=["all", "train", "val"],
+        default="all",
+        help="Which episodes to process"
+    )
     args = parser.parse_args()
 
     accelerator = Accelerator()
@@ -172,6 +195,7 @@ if __name__ == "__main__":
         device=accelerator.device,
         size=(192, 320),
         rgb_skip=3, #  to downsample 15hz video to 5hz video
+        split=args.split,
     )
     tmp_data_loader = torch.utils.data.DataLoader(
             dataset,

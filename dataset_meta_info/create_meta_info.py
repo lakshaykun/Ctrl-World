@@ -64,11 +64,23 @@ if __name__ == "__main__":
     # dataset_name
     parser.add_argument('--dataset_name', type=str, default='droid_subset')
     parser.add_argument('--debug', action='store_true')
+    parser.add_argument(
+        "--split",
+        choices=["all", "train", "val"],
+        default="all",
+        help="Which metadata split to generate"
+    )
     args = parser.parse_args()
     
     ########################### xhand datasets ###########################
     sequence_length = 8
-    for data_type in ['val', 'train']:
+    splits = (
+        ["val", "train"]
+        if args.split == "all"
+        else [args.split]
+    )
+
+    for data_type in splits:
         samples_all = []
         ann_files_all = []
         data_root = args.droid_output_path
