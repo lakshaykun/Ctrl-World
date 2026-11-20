@@ -209,9 +209,69 @@ class EncodeLatentDataset(Dataset):
                     if temp_file.exists():
                         temp_file.unlink()
 
-        pose = np.asarray(traj_info["observation.state.cartesian_position"])
-        gripper = np.asarray(traj_info["observation.state.gripper_position"])[:, None]
-        states = np.concatenate((pose, gripper), axis=-1)[::rgb_skip].tolist()
+        # ---------------------------------------------------------
+        # Extract robot states aligned with downsampled video frames
+        # ---------------------------------------------------------
+
+        # Cartesian position: 6D
+        pose = np.asarray(
+            traj_info["observation.state.cartesian_position"],
+            dtype=np.float32
+        )
+
+        # Gripper position: 1D -> 2D
+        gripper = np.asarray(
+            traj_info["observation.state.gripper_position"],
+            dtype=np.float32
+        ).reshape(-1, 1)
+
+        # Cartesian position + gripper = 7D
+        states = np.concatenate(
+            (pose, gripper),
+            axis=-1
+        )[::rgb_skip]
+
+        # ---------------------------------------------------------
+        # Extract joint positions aligned with downsampled frames
+        # ---------------------------------------------------------
+
+        joint_position = np.asarray(
+            traj_info["observation.state.joint_position"],
+            dtype=np.float32
+        )
+
+        # Joint position: 7D
+        # Gripper position: 1D
+        # Combined robot configuration: 8D
+        joints = np.concatenate(
+            (joint_position, gripper),
+            axis=-1
+        )[::rgb_skip]
+
+        # ---------------------------------------------------------
+        # Validate frame alignment
+        # ---------------------------------------------------------
+
+        if len(states) != last_frame_count:
+            raise ValueError(
+                f"State/video length mismatch for episode {traj_id}: "
+                f"states={len(states)}, video={last_frame_count}"
+            )
+
+        if len(joints) != last_frame_count:
+            raise ValueError(
+                f"Joint/video length mismatch for episode {traj_id}: "
+                f"joints={len(joints)}, video={last_frame_count}"
+            )
+
+        if joints.shape[1] != 8:
+            raise ValueError(
+                f"Expected 8D joints for episode {traj_id}, "
+                f"got shape {joints.shape}"
+            )
+
+        states = states.tolist()
+        joints = joints.tolist()
 
         info = {
             "texts": [instruction],
@@ -220,15 +280,19 @@ class EncodeLatentDataset(Dataset):
             "video_length": last_frame_count,
             "state_length": len(states),
             "raw_length": len(traj_info["observation.state.cartesian_position"]),
+
             "videos": [
                 {"video_path": f"videos/{data_type}/{traj_id}/{i}.mp4"}
                 for i in range(3)
             ],
+
             "latent_videos": [
                 {"latent_video_path": f"latent_videos/{data_type}/{traj_id}/{i}.pt"}
                 for i in range(3)
             ],
+
             "states": states,
+            "joints": joints,
         }
         for key in (
             "observation.state.cartesian_position",
