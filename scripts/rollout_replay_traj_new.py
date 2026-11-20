@@ -151,7 +151,7 @@ class agent:
         vae = self.model.pipeline.vae
         for true_video in video_dict:
             true_video_tensor = torch.from_numpy(true_video).to(self.dtype).to(device)
-            x = true_video_tensor.permute(0, 3, 1, 2).to(device) / 255.0 * 2 - 1
+            x = true_video_tensor.permute(0, 3, 1, 2) / 255.0 * 2 - 1
             with torch.no_grad():
                 batch_size = 32
                 latents = []
@@ -276,6 +276,14 @@ if __name__ == "__main__":
     parser.add_argument("--dataset_meta_info_path", type=str, default=None)
     parser.add_argument("--dataset_names", type=str, default=None)
     parser.add_argument("--task_type", type=str, default="replay")
+
+    # Skip MP4 generation to reduce CPU and disk overhead
+    parser.add_argument(
+        "--skip_video",
+        action="store_true",
+        help="Skip final MP4 video reconstruction and saving",
+    )
+
     args_new = parser.parse_args()
 
     args = wm_args(
@@ -380,16 +388,21 @@ if __name__ == "__main__":
             _restore_rng_state(resume_state["rng_state"])
 
         video_to_save = []
-        # Reconstruct already-completed video sections from their saved evaluation arrays.
-        for interaction_i in range(next_interaction):
-            with np.load(eval_paths[interaction_i], allow_pickle=False) as saved:
-                gt = saved["ground_truth"]
-                pred = saved["prediction"]
-            strip = _compose_video_strip(gt, pred)
-            if interaction_i == interact_num - 1:
-                video_to_save.append(strip)
-            else:
-                video_to_save.append(strip[: pred_step - 1])
+        video_to_save = None if args.skip_video else []
+
+        # Reconstruct completed video sections only when video output is enabled.
+        if not args.skip_video:
+            for interaction_i in range(next_interaction):
+                with np.load(eval_paths[interaction_i], allow_pickle=False) as saved:
+                    gt = saved["ground_truth"]
+                    pred = saved["prediction"]
+
+                strip = _compose_video_strip(gt, pred)
+
+                if interaction_i == interact_num - 1:
+                    video_to_save.append(strip)
+                else:
+                    video_to_save.append(strip[: pred_step - 1])
 
         for i in range(next_interaction, interact_num):
             start_id = int(i * (pred_step - 1))
@@ -408,8 +421,6 @@ if __name__ == "__main__":
 
             print("################ policy forward ####################")
             cartesian_pose = eef_gt[start_id:end_id]
-            print("cartesian space action", cartesian_pose[0])
-            print("cartesian space action", cartesian_pose[-1])
 
             print("################ world model forward ################")
             print(f"traj_id:{val_id_i}, interact step: {i}/{interact_num}")
@@ -450,10 +461,11 @@ if __name__ == "__main__":
             his_cond.append(
                 torch.cat([v[pred_step - 1] for v in predicted_latents], dim=1).unsqueeze(0)
             )
-            if i == interact_num - 1:
-                video_to_save.append(videos_cat)
-            else:
-                video_to_save.append(videos_cat[: pred_step - 1])
+            if not args.skip_video:
+                if i == interact_num - 1:
+                    video_to_save.append(videos_cat)
+                else:
+                    video_to_save.append(videos_cat[: pred_step - 1])
 
             # Commit resume state only after output and history have both been saved.
             state_to_save = {
@@ -467,20 +479,30 @@ if __name__ == "__main__":
             _atomic_torch_save(state_to_save, resume_path)
             print(f"Resume checkpoint saved: next interaction {i + 1}/{interact_num}")
 
-        video = np.concatenate(video_to_save, axis=0)
-        text_id = (
-            text_i.replace(" ", "_")
-            .replace(",", "")
-            .replace(".", "")
-            .replace("'", "")
-            .replace('"', "")
-        )[:30]
-        uuid = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename_video = (
-            f"{args.save_dir}/{args.task_name}/video/"
-            f"time_{uuid}_traj_{val_id_i}_{start_idx_i}_{pred_step}_{text_id}.mp4"
-        )
-        os.makedirs(os.path.dirname(filename_video), exist_ok=True)
-        mediapy.write_video(filename_video, video, fps=4)
-        print(f"Saving video to {filename_video}")
+        if not args.skip_video:
+            video = np.concatenate(video_to_save, axis=0)
+
+            text_id = (
+                text_i.replace(" ", "_")
+                .replace(",", "")
+                .replace(".", "")
+                .replace("'", "")
+                .replace('"', "")
+            )[:30]
+
+            uuid = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            filename_video = (
+                f"{args.save_dir}/{args.task_name}/video/"
+                f"time_{uuid}_traj_{val_id_i}_{start_idx_i}_{pred_step}_{text_id}.mp4"
+            )
+
+            os.makedirs(os.path.dirname(filename_video), exist_ok=True)
+            mediapy.write_video(filename_video, video, fps=4)
+
+            print(f"Saving video to {filename_video}")
+
+        else:
+            print(f"Skipping MP4 generation for trajectory {val_id_i}")
+
         print("##########################################################################")
