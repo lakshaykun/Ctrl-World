@@ -387,7 +387,6 @@ if __name__ == "__main__":
             his_eef = resume_state["his_eef"]
             _restore_rng_state(resume_state["rng_state"])
 
-        video_to_save = []
         video_to_save = None if args.skip_video else []
 
         # Reconstruct completed video sections only when video output is enabled.
@@ -411,10 +410,6 @@ if __name__ == "__main__":
 
             joint_first = his_joint[-1][0]
             state_first = his_eef[-1][0]
-            if i == 0:
-                video_first = [v[0] for v in video_dict]
-            else:
-                video_first = [v[-1] for v in video_dict_pred]
 
             assert joint_first.shape == (8,), f"Expected joint_first shape (8,), got {joint_first.shape}"
             assert state_first.shape == (7,), f"Expected state_first shape (7,), got {state_first.shape}"
