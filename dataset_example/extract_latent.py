@@ -126,7 +126,7 @@ class EncodeLatentDataset(Dataset):
                 "action.gripper_position",
                 "action.joint_velocity",
             ]
-            traj_info = {key: [v.tolist() for v in df[key]] for key in columns}
+            traj_info = {key: [v.tolist() if hasattr(v, "tolist") else v for v in df[key]] for key in columns}
             traj_info["success"] = df["is_episode_successful"].iloc[0]
 
             camera_names = [
