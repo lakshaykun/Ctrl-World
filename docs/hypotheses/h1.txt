@@ -1,0 +1,15 @@
+Direction 2: Uncertainty-aware long-horizon prediction
+
+Research question: Can the model estimate when its future predictions become unreliable?
+
+Imagine:
+- At 1 second, the prediction is reliable.
+- At 5 seconds, some uncertainty appears.
+- At 10 seconds, the predicted object position is incorrect.
+Possible contribution:
+
+Develop a reliability estimator that monitors prediction quality and determines when the model should use a shorter prediction horizon or re-anchor its context.
+
+This could help prevent errors from accumulating.
+
+Important: Uncertainty estimation and rollout correction already have related research, including recent work on re-denoising consistency. We would need a more specific contribution than simply adding uncertainty estimation.

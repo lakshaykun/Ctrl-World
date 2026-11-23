@@ -1,0 +1,19 @@
+Direction 1: Physical-consistency verification
+My first choice
+
+Research question: Can we detect physically incorrect generated robot interactions?
+
+Imagine the robot moves towards a cup. The generated video shows the cup moving before the gripper touches it.
+
+The video might look visually realistic, but the physical interaction is incorrect.
+
+Possible contribution:
+- Detect robot-object contact events.
+- Track object movement across generated frames.
+- Check whether object movement is consistent with the action and contact.
+- Assign a physical-consistency score to each generated trajectory.
+Why investigate this?
+
+Ctrl-World already has action conditioning and multi-view generation. 
+Instead of replacing its architecture, we could investigate an additional 
+mechanism that verifies whether its predictions are physically credible.
