@@ -31,7 +31,8 @@ eval/
 │       ├── object_metrics.py
 │       ├── action_consistency.py
 │       ├── physical_metrics.py
-│       └── multiview_metrics.py
+│       ├── multiview_metrics.py
+│       └── video_distribution_metrics.py
 └── results/
     └── .gitkeep
 ```
@@ -210,19 +211,38 @@ are compared across cameras as if they were geometrically aligned. Cross-view
 geometry is explicitly unavailable without calibration or validated
 correspondences.
 
-### FVD (optional)
+### Dataset-level FID and FVD (optional)
 
-FVD is the Fréchet distance between the means and covariances of compatible
-real and generated **clip-level video feature** vectors. It is dataset-level,
-not per-frame. The evaluator computes the Fréchet formula from an NPZ provided
-with `--fvd_features`; that file must contain two 2D arrays named
-`real_features` and `generated_features`, with matching feature dimensions and
-at least two clips per distribution. The vectors must come from the same
-frozen, compatible pretrained video feature extractor and identical clip
-preprocessing (for example an I3D FVD protocol). Give its provenance using
-`--fvd_extractor_name`. Features are not extracted by this evaluator. Without
-compatible local features, FVD is unavailable; no extractor weights are
-downloaded and no score is fabricated.
+FID and FVD are distribution metrics reported only in `summary.json` (also
+under `distribution_metrics`); they are not added to per-frame or
+per-interaction CSVs.
+
+- **FID** compares the dataset-level distributions of all successfully loaded real and
+  generated RGB frames using TorchMetrics Inception-v3 2048-dimensional
+  features. Updates are batched independently of LPIPS. The default batch size
+  is 64; images are resized to the Inception input size by the metric. At least
+  two real and two generated frames are required.
+- **Video FVD** uses `cd-fvd` I3D-400 features and computes a dataset-level
+  Fréchet distance over reconstructed video clips. Samples are grouped by
+  trajectory, then deterministically ordered by first source frame index,
+  interaction index, and path. When chunks overlap, the earliest ordered chunk
+  supplies each camera/source-frame pair. Duplicate source-frame indices
+  (including repeated terminal frames) are kept once. Source-frame gaps and
+  resolution changes split the sequence; clips never cross a segment boundary
+  or camera. Because gaps are respected, `--frame_stride` greater than 1 can
+  reduce the number of eligible clips or leave FVD unavailable. At least two
+  clips are required.
+- **Precomputed FVD** remains supported. An NPZ containing matching 2D
+  `real_features` and `generated_features` matrices can be supplied instead of
+  video clips; at least two compatible clip features per distribution and
+  `--fvd_extractor_name` provenance are required.
+
+The evaluator never downloads metric weights. FID uses `--fid_weights` or an
+already-cached Torch-Fidelity file named
+`weights-inception-2015-12-05-6726825d.pth`. Video FVD uses `--fvd_weights` or
+the I3D checkpoint already bundled in the local `cd-fvd` package. If weights,
+packages, source indices, or enough frames/clips are unavailable, the metric is
+reported as unavailable with a reason; no score is fabricated.
 
 ## Running
 
@@ -285,13 +305,45 @@ python -m eval.scripts.run_evaluation \
   --fvd_extractor_name <extractor-and-preprocessing-version>
 ```
 
+Video-based FVD from locally available I3D weights:
+
+```bash
+python -m eval.scripts.run_evaluation \
+  --input_dir <evaluation-data-directory> \
+  --output_dir eval/results \
+  --metrics fvd \
+  --fvd_weights <local-i3d_pretrained_400.pt> \
+  --fvd_clip_len 16 \
+  --fvd_stride 16 \
+  --max_fvd_clips_per_trajectory 64
+```
+
+Dataset-level FID with local Inception weights:
+
+```bash
+python -m eval.scripts.run_evaluation \
+  --input_dir <evaluation-data-directory> \
+  --output_dir eval/results \
+  --metrics fid \
+  --fid_weights <local-inception-weights.pth> \
+  --fid_batch_size 64
+```
+
 Supported metrics are `all`, `visual`, `temporal`, `lpips`, `action`,
-`objects`, `physical`, `multiview`, and `fvd`, supplied as a comma-separated
+`objects`, `physical`, `multiview`, `fid`, and `fvd`, supplied as a comma-separated
 list (or `all` alone). Other useful options are:
 
 - `--frame_stride`: positive integer, default `1`.
 - `--device`: `cpu` by default, or a requested CUDA device for LPIPS/detector.
 - `--batch_size`: positive LPIPS batch size, default `16`.
+- `--fid_batch_size`: positive, independent FID batch size, default `64`.
+- `--fid_weights`: local Torch-Fidelity Inception-v3 weights; otherwise the
+  evaluator checks its standard local Torch cache.
+- `--fvd_weights`: local `cd-fvd` I3D-400 weights; otherwise the evaluator
+  checks the checkpoint in the installed package.
+- `--fvd_clip_len`, `--fvd_stride`: FVD clip length and start stride, defaults
+  `16` and `16`.
+- `--max_fvd_clips_per_trajectory`: per-camera trajectory cap, default `64`.
 - `--save_visualizations`: write paired frames and metric plots.
 - `--save_comparison_videos`: write side-by-side MP4 videos.
 - `--annotation_root`: optional dataset root containing `annotation/val`.
@@ -336,11 +388,12 @@ camera-, detector-, and data-dependent limitations in mind.
 
 ## Dependencies and reproducibility
 
-The implementation reuses packages already listed in the repository's
-`requirements.txt`: NumPy, SciPy, scikit-image, OpenCV, PyTorch, LPIPS, Pillow,
-and Matplotlib. No dependency was added. Optional packages and local weights
-are needed only for the corresponding metric. The evaluator does not install
-packages, download weights, or initialize Ctrl-World.
+The implementation uses packages listed in the repository's `requirements.txt`,
+including TorchMetrics `1.8.2` for FID and `cd-fvd` for I3D FVD. TorchMetrics
+`1.8.2` supports PyTorch `>=2.0,<2.9`, compatible with the repository's pinned
+PyTorch `2.7.1`. Optional packages and local weights are needed only for the
+corresponding metric. The evaluator does not install packages, download
+weights, or initialize Ctrl-World.
 
 Reproducibility details (input paths, chosen metrics, device, sampling,
 detector/tracker settings, annotation root, and preprocessing assumptions)

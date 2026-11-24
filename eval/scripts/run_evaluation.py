@@ -27,6 +27,12 @@ from .metrics.perceptual_metrics import (
 from .metrics.physical_metrics import detect_overlap_candidates, summarize_physical_candidates
 from .metrics.pixel_metrics import compute_pixel_metrics
 from .metrics.temporal_metrics import compute_temporal_metrics, horizon_rows, mean_flow_magnitude
+from .metrics.video_distribution_metrics import (
+    compute_video_fvd,
+    load_fid_metric,
+    resolve_fid_weights,
+    update_fid_metric,
+)
 from .reporting import create_run_directory, write_reports
 from .utils import EvaluationSample, json_safe
 from .validate_data import validate_sample, validation_failure
@@ -39,6 +45,7 @@ ALL_METRICS = {
     "objects",
     "physical",
     "multiview",
+    "fid",
     "fvd",
 }
 VALID_METRICS = ALL_METRICS | {"lpips"}
@@ -61,10 +68,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--metrics",
         default="all",
-        help="Comma-separated groups: all, visual, temporal, lpips, action, objects, physical, multiview, fvd",
+        help="Comma-separated groups: all, visual, temporal, lpips, action, objects, physical, multiview, fid, fvd",
     )
     parser.add_argument("--device", default="cpu", help="Device for optional neural metrics (cpu or cuda)")
     parser.add_argument("--batch_size", type=int, default=16, help="Batch size for LPIPS")
+    parser.add_argument("--fid_batch_size", type=int, default=64, help="Independent batch size for FID")
     parser.add_argument("--frame_stride", type=int, default=1, help="Evaluate every Nth stored frame")
     parser.add_argument("--save_visualizations", action="store_true")
     parser.add_argument("--save_comparison_videos", action="store_true")
@@ -77,10 +85,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--lpips_weights", default=None, help="Path to local calibrated LPIPS weights")
     parser.add_argument("--lpips_network", choices=("alex", "vgg", "squeeze"), default="alex")
     parser.add_argument(
+        "--fid_weights",
+        default=None,
+        help="Path to local Torch-Fidelity Inception-v3 weights; cached weights are used if present",
+    )
+    parser.add_argument(
         "--fvd_features",
         default=None,
         help="Optional NPZ with compatible real_features and generated_features clip matrices",
     )
+    parser.add_argument(
+        "--fvd_weights",
+        default=None,
+        help="Path to local cd-fvd I3D-400 weights; automatic downloads are disabled",
+    )
+    parser.add_argument("--fvd_clip_len", type=int, default=16)
+    parser.add_argument("--fvd_stride", type=int, default=16)
+    parser.add_argument("--max_fvd_clips_per_trajectory", type=int, default=64)
     parser.add_argument(
         "--fvd_extractor_name",
         default=None,
@@ -89,6 +110,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.batch_size < 1:
         parser.error("--batch_size must be positive")
+    if args.fid_batch_size < 1:
+        parser.error("--fid_batch_size must be positive")
+    if args.fvd_clip_len < 1 or args.fvd_stride < 1:
+        parser.error("--fvd_clip_len and --fvd_stride must be positive")
+    if args.max_fvd_clips_per_trajectory < 1:
+        parser.error("--max_fvd_clips_per_trajectory must be positive")
     if args.frame_stride < 1:
         parser.error("--frame_stride must be positive")
     if args.device != "cpu" and not args.device.startswith("cuda"):
@@ -191,8 +218,40 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "Detector plugin outputs xyxy boxes; greedy IoU tracker; custom image-space metrics"
         ),
         "action_states": "annotation states are 7D; first 3 dimensions used for translation step",
-        "fvd": "Fréchet distance over user-provided compatible clip-level feature matrices",
+        "fvd": {
+            "mode": (
+                "precomputed_clip_features"
+                if args.fvd_features
+                else "video_i3d"
+            ),
+            "clip_length": args.fvd_clip_len,
+            "clip_stride": args.fvd_stride,
+            "max_clips_per_trajectory_camera": args.max_fvd_clips_per_trajectory,
+            "frame_alignment": (
+                "exact frame_indices or contiguous start_frame_index fallback; first sorted "
+                "trajectory chunk wins overlaps; duplicate indices removed; gaps split clips"
+            ),
+        },
+        "fid": {
+            "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+            "preprocessing": "uint8 RGB; 299x299 resize; antialias=False",
+            "batch_size": args.fid_batch_size,
+            "weights": "explicit local file or existing Torch-Fidelity cache; no downloads",
+        },
     }
+
+    fid_metric: Any | None = None
+    fid_reason: str | None = None
+    fid_weights_path: Path | None = None
+    fid_real_frame_count = 0
+    fid_generated_frame_count = 0
+    if "fid" in requested:
+        fid_weights_path, fid_reason = resolve_fid_weights(args.fid_weights)
+        if fid_weights_path is not None:
+            try:
+                fid_metric = load_fid_metric(fid_weights_path, args.device)
+            except (ImportError, OSError, EOFError, TypeError, ValueError, RuntimeError) as exc:
+                fid_reason = f"Could not initialize FID from local weights: {exc}"
 
     lpips_model = None
     if "lpips" in requested:
@@ -276,6 +335,20 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         sample_is_valid = validation_item["status"] == "valid"
         valid_count += int(sample_is_valid)
         camera_ids_seen.update(range(sample.ground_truth.shape[0]))
+        if fid_metric is not None:
+            try:
+                added_frames = update_fid_metric(
+                    fid_metric,
+                    sample.ground_truth,
+                    sample.prediction,
+                    args.fid_batch_size,
+                    args.device,
+                )
+                fid_real_frame_count += added_frames
+                fid_generated_frame_count += added_frames
+            except (ImportError, OSError, TypeError, ValueError, RuntimeError) as exc:
+                fid_reason = f"FID feature extraction failed for {sample.path}: {exc}"
+                fid_metric = None
         sample_metric_rows: list[dict[str, Any]] = []
         pixel_rows: list[dict[str, Any]] = []
         temporal_rows: list[dict[str, Any]] = []
@@ -739,26 +812,121 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         if selected
     )
     horizon_summary = horizon_rows(frame_rows, horizon_metric_names)
-    if "fvd" in requested:
-        real_features, generated_features, fvd_reason = _load_fvd_features(args.fvd_features)
-        if fvd_reason is None and not args.fvd_extractor_name:
-            fvd_reason = "Supply --fvd_extractor_name to record feature-extractor provenance"
-        if fvd_reason is None:
-            try:
-                fvd_value = frechet_distance_from_features(real_features, generated_features)
-                fvd_status = {
-                    "metric": "fvd",
-                    "status": "available",
-                    "value": fvd_value,
-                    "reason": None,
-                    "feature_extractor": args.fvd_extractor_name or "unspecified user-supplied extractor",
-                    "real_clip_count": int(len(real_features)),
-                    "generated_clip_count": int(len(generated_features)),
-                }
-            except (ValueError, np.linalg.LinAlgError) as exc:
-                fvd_status = unavailable_fvd(str(exc))
+    if "fid" in requested:
+        if fid_reason is not None:
+            fid_status = {
+                "metric": "fid",
+                "status": "unavailable",
+                "value": None,
+                "reason": fid_reason,
+                "mode": "dataset_frame_distribution",
+                "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+                "weights_path": str(fid_weights_path) if fid_weights_path else None,
+                "real_frame_count": fid_real_frame_count,
+                "generated_frame_count": fid_generated_frame_count,
+                "batch_size": args.fid_batch_size,
+            }
+        elif fid_metric is None:
+            fid_status = {
+                "metric": "fid",
+                "status": "unavailable",
+                "value": None,
+                "reason": "FID metric initialization was unavailable",
+                "mode": "dataset_frame_distribution",
+                "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+                "weights_path": str(fid_weights_path) if fid_weights_path else None,
+                "real_frame_count": fid_real_frame_count,
+                "generated_frame_count": fid_generated_frame_count,
+                "batch_size": args.fid_batch_size,
+            }
+        elif fid_real_frame_count < 2 or fid_generated_frame_count < 2:
+            fid_status = {
+                "metric": "fid",
+                "status": "unavailable",
+                "value": None,
+                "reason": "FID requires at least two real and two generated frames",
+                "mode": "dataset_frame_distribution",
+                "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+                "weights_path": str(fid_weights_path) if fid_weights_path else None,
+                "real_frame_count": fid_real_frame_count,
+                "generated_frame_count": fid_generated_frame_count,
+                "batch_size": args.fid_batch_size,
+            }
         else:
-            fvd_status = unavailable_fvd(fvd_reason)
+            try:
+                fid_value = float(fid_metric.compute().item())
+                fid_status = {
+                    "metric": "fid",
+                    "status": "available",
+                    "value": fid_value,
+                    "reason": None,
+                    "mode": "dataset_frame_distribution",
+                    "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+                    "weights_path": str(fid_weights_path) if fid_weights_path else None,
+                    "real_frame_count": fid_real_frame_count,
+                    "generated_frame_count": fid_generated_frame_count,
+                    "batch_size": args.fid_batch_size,
+                }
+                if not np.isfinite(fid_value):
+                    fid_status.update(
+                        {
+                            "status": "unavailable",
+                            "value": None,
+                            "reason": "FID computation returned a non-finite value",
+                        }
+                    )
+            except (ImportError, OSError, TypeError, ValueError, RuntimeError) as exc:
+                fid_status = {
+                    "metric": "fid",
+                    "status": "unavailable",
+                    "value": None,
+                    "reason": f"FID computation failed: {exc}",
+                    "mode": "dataset_frame_distribution",
+                    "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+                    "weights_path": str(fid_weights_path) if fid_weights_path else None,
+                    "real_frame_count": fid_real_frame_count,
+                    "generated_frame_count": fid_generated_frame_count,
+                    "batch_size": args.fid_batch_size,
+                }
+        if fid_status["status"] == "unavailable":
+            unavailable.append(fid_status)
+    else:
+        fid_status = {"metric": "fid", "status": "not_requested", "value": None, "reason": None}
+
+    if "fvd" in requested:
+        if args.fvd_features:
+            real_features, generated_features, fvd_reason = _load_fvd_features(args.fvd_features)
+            if fvd_reason is None and not args.fvd_extractor_name:
+                fvd_reason = "Supply --fvd_extractor_name to record feature-extractor provenance"
+            if fvd_reason is None:
+                try:
+                    fvd_value = frechet_distance_from_features(real_features, generated_features)
+                    fvd_status = {
+                        "metric": "fvd",
+                        "status": "available",
+                        "value": fvd_value,
+                        "reason": None,
+                        "mode": "precomputed_clip_features",
+                        "feature_extractor": args.fvd_extractor_name,
+                        "real_clip_count": int(len(real_features)),
+                        "generated_clip_count": int(len(generated_features)),
+                    }
+                except (ValueError, np.linalg.LinAlgError) as exc:
+                    fvd_status = unavailable_fvd(str(exc))
+                    fvd_status["mode"] = "precomputed_clip_features"
+            else:
+                fvd_status = unavailable_fvd(fvd_reason)
+                fvd_status["mode"] = "precomputed_clip_features"
+        else:
+            fvd_status = compute_video_fvd(
+                files,
+                args.frame_stride,
+                args.fvd_clip_len,
+                args.fvd_stride,
+                args.max_fvd_clips_per_trajectory,
+                args.device,
+                args.fvd_weights,
+            )
         if fvd_status["status"] == "unavailable":
             unavailable.append(fvd_status)
     else:
@@ -812,6 +980,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "physical_candidates": any(
                 row.get("physical_violation_rate") is not None for row in interaction_rows
             ),
+            "fid": fid_status["status"] == "available",
             "fvd": fvd_status["status"] == "available",
             "per_camera": True,
             "cross_view_geometry": False,
@@ -820,7 +989,9 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         "aggregated_metrics": dataset_summary(interaction_rows),
         "camera_wise_results": camera_rows,
         "horizon_wise_results": horizon_summary,
+        "fid": fid_status,
         "fvd": fvd_status,
+        "distribution_metrics": {"fid": fid_status, "fvd": fvd_status},
         "metric_configuration": metric_configuration,
         "detector_configuration": {
             "detector": args.detector,
