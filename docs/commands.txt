@@ -39,6 +39,6 @@ python dataset_meta_info/create_meta_info.py \
 git fetch --all
 git reset --hard origin/main
 
-pgrep -af 'rollout_replay_traj.py'
+pgrep -af 'rollout_replay_traj_new.py'
 kill -CONT 811193
 kill -TERM 811193
