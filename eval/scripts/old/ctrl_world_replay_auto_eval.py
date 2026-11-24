@@ -235,9 +235,21 @@ def judge(model, processor, args, row):
         f"Ctrl-World replay. Interaction/frame positions: {ids}. Judge the generated prediction."}]
     content.extend({"type": "image", "image": im} for im in images)
     messages = [
-        {"role": "system", "content": PROMPT},
-        {"role": "user", "content": content},
-    ]
+            {
+                    "role": "system",
+                            "content": [
+                                        {
+                                        "type": "text",
+                                     "text": PROMPT
+                                                                                    }
+                                                                                            ]
+                                                                                                },
+                                                                                                    {
+                                                                        "role": "user",
+                                                                                "content": content
+                                            }
+                                        ]
+    
     inputs = processor.apply_chat_template(
         messages, tokenize=True, add_generation_prompt=True,
         return_dict=True, return_tensors="pt"
