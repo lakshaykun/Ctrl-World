@@ -42,3 +42,12 @@ git reset --hard origin/main
 pgrep -af 'rollout_replay_traj_new.py'
 kill -CONT 811193
 kill -TERM 811193
+
+
+python scripts/ctrl_world_replay_auto_eval.py \
+    --rollout-dir synthetic_traj/Rollouts_replay_droid_subset \
+    --dataset-root dataset_example/droid_subset \
+    --annotation-split val \
+    --db results/droid_subset/replay_eval.sqlite \
+    --out-dir results/droid_subset/replay_eval \
+    --frames 8

@@ -350,7 +350,8 @@ def export(db, out_dir):
               "annotation_path", "confidence", "evidence", "failure_reason",
               "sampled_frames", "error", "evaluated_at"]
     with (out/"episode_results.csv").open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
+        # Ignore internal SQLite columns (model, npz_signature) in the user-facing CSV.
+        w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
     valid = [r for r in rows if r["verdict"] in ("success", "failure", "uncertain")]
