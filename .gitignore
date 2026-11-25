@@ -16,3 +16,5 @@ process.py
 dataset_example/droid
 dataset_meta_info/droid
 synthetic_traj/Rollouts_replay_droid
+eval/results
+eval/weights
