@@ -13,6 +13,17 @@ CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj_new.py \
   --clip_model_path checkpoints/clip \
   --ckpt_path checkpoints/ctrl-world/checkpoint-10000.pt
 
+CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj_new.py \
+  --task_type replay \
+  --dataset_names droid_subset \
+  --dataset_root_path dataset_example \
+  --dataset_meta_info_path dataset_meta_info \
+  --svd_model_path checkpoints/svd \
+  --clip_model_path checkpoints/clip \
+  --ckpt_path checkpoints/ctrl-world/checkpoint-10000.pt \
+  --dynamic_memory \
+  --skip_video
+
 CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_video_metrics.py \
   --data_dir synthetic_traj/Rollouts_replay_droid/evaluation_data \
   --output_root evaluation_results \

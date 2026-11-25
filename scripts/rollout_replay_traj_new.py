@@ -291,6 +291,13 @@ if __name__ == "__main__":
         help="Use rule-based dynamic memory selection instead of fixed history indices",
     )
 
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default=None,
+        help="Custom directory to save evaluation outputs, resume checkpoints, and videos",
+    )
+
     args_new = parser.parse_args()
 
     args = wm_args(
@@ -307,12 +314,16 @@ if __name__ == "__main__":
 
     args = merge_args(args, args_new)
 
+    if args.output_dir is not None:
+        args.save_dir = args.output_dir
+
     Agent = agent(args)
     interact_num = args.interact_num
     pred_step = args.pred_step
     num_history = args.num_history
     num_frames = args.num_frames
     print(f"rollout with {args.task_type}")
+    print(f"Output directory: {args.save_dir}")
 
     for val_id_i, text_i, start_idx_i in zip(args.val_id, args.instruction, args.start_idx):
         eval_dir = os.path.join(
