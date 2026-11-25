@@ -1,0 +1,4 @@
+text instruction -> clip -> text embedding
+text embedding + action embedding
+
+is it enough/good to just both the embedding? can there be something better.
