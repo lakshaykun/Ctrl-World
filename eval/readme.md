@@ -1,8 +1,10 @@
 # Ctrl-World Offline World-Model Evaluation
 
-This directory evaluates already-generated Ctrl-World predictions against
-their recorded observations. It does not initialize Ctrl-World, run inference,
-train a model, or measure robot-policy success or task completion.
+This directory contains offline evaluators for already-generated Ctrl-World
+predictions. The metric pipeline compares predictions with recorded
+observations without initializing Ctrl-World or training a model. A separate,
+optional local VLM path classifies complete replay predictions; it does not run
+the Ctrl-World world model or measure real robot-policy success.
 
 The evaluator reports visual similarity, temporal consistency, optional object
 and action-conditioned diagnostics, conservative image-space physical
@@ -24,6 +26,7 @@ eval/
 │   ├── visualization.py
 │   ├── reporting.py
 │   ├── utils.py
+│   ├── vlm_success_evaluation.py
 │   └── metrics/
 │       ├── pixel_metrics.py
 │       ├── perceptual_metrics.py
@@ -36,6 +39,9 @@ eval/
 └── results/
     └── .gitkeep
 ```
+
+The optional VLM path has focused tests in `eval/tests/` and its separate
+Transformers constraint in `eval/requirements_vlm.txt`.
 
 ## Input data and array layout
 
@@ -281,6 +287,63 @@ standard Torchvision ImageNet weight cache and may download the fixed ResNet-50
 weights when they are not cached.
 
 ## Running
+
+### Optional Qwen3-VL replay success classification
+
+This standalone path evaluates a complete saved replay trajectory against the
+original DROID `success` annotation. It reads the task instruction, binary
+label, and video length from the configured validation annotations. It
+reconstructs chronology from each replay NPZ's `prediction` array and source
+frame metadata, trimming the shared final frame from every non-final
+interaction to match the replay writer. Missing interactions, inconsistent
+boundaries, gaps, or incomplete coverage are reported as unavailable rather
+than scored.
+
+The VLM receives only the annotation instruction and a chronological sequence
+of images. Each image is a labeled grid of synchronized prediction camera
+views. Ground-truth frames, annotation labels, NPZ instructions, and comparison
+videos are not provided to the model. Inference is deterministic. Malformed
+structured outputs are retried up to the configured limit and then reported as
+failed.
+
+Install the optional Transformers dependency without changing the root
+`requirements.txt` pin. PyTorch must be installed separately with a host-
+compatible CUDA wheel; inference requires CUDA. The evaluator does not download
+model weights when `--local-files-only` is specified, and the documentation or
+unit tests do not require model loading.
+
+```powershell
+python -m pip install -r eval/requirements_vlm.txt
+python -m eval.scripts.vlm_success_evaluation `
+  --rollout-dir synthetic_traj/Rollouts_replay_droid_subset `
+  --output-dir eval/results/vlm_success `
+  --trajectory-id 18599
+```
+
+By default the dataset directory is resolved through `config.wm_args` using
+the replay dataset name inferred from the rollout directory. Override it with
+`--dataset-root-path` and `--dataset-name` if needed. The default model is
+`Qwen/Qwen3-VL-4B-Instruct`; use `--model-revision` to pin a branch, tag, or
+commit, or `--local-files-only` to require cached model/config files.
+
+Each timestamped run writes `config.json`, `predictions.json`,
+`predictions.csv`, `summary.json`, `confusion_matrix.json`, and
+`validation_report.json`. Completed predictions can be resumed with
+`--resume-run <run-directory>`; cache identity includes source NPZ and
+annotation hashes, instruction, model revision, prompt, and sampling settings.
+Use `--force` to rerun cached predictions. Useful controls include
+`--sampling-fps`, `--max-frames`, `--max-pixels`, `--max-new-tokens`, and
+`--max-parse-retries`.
+
+The original DROID labels are binary (`0` failure, `1` success). `uncertain` is
+an explicit prediction-side abstention, never a fabricated ground-truth
+category. Binary accuracy, precision, recall, and F1 use only completed,
+unambiguous predictions; the separate 2-by-3 outcome matrix retains uncertain
+predictions and reports prediction coverage. Original annotation success rate
+and VLM-predicted success rate are shown separately and are not interchangeable.
+
+Do not run full-dataset or GPU inference as part of unit-test validation. A
+single-trajectory run is available for a deliberate local smoke test.
 
 Run commands from the repository root. Visual and temporal evaluation does
 not require annotation files:
