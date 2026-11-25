@@ -246,15 +246,9 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "Detector plugin outputs xyxy boxes; greedy IoU tracker; custom image-space metrics"
         ),
         "action_states": "annotation states are 7D; first 3 dimensions used for translation step",
-        "recorded_action_metrics": {
+        "gripper_transition_agreement": {
             "raw_to_video_alignment": "raw_index = 3 * source_frame_index",
-            "command_observation_alignment": (
-                "MAEs unavailable because command/observation temporal semantics are undocumented"
-            ),
             "gripper_transition_threshold_native_units": 0.1,
-            "velocity_metrics": (
-                "unavailable without raw timestamps/control period and declared velocity units"
-            ),
         },
         "cross_view_object_agreement": (
             "pairwise category-set Jaccard; synchronized source frames; both-empty pairs excluded"
@@ -679,14 +673,6 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             )
             multiview_values.update(cvoa_values)
             multiview_values.update(cvfc_values)
-            multiview_values.update(
-                {
-                    "cross_view_geometry_status": "unavailable",
-                    "cross_view_geometry_reason": (
-                        "No camera calibration or valid cross-view correspondence metadata provided"
-                    ),
-                }
-            )
             for row in cvoa_rows + cvfc_rows:
                 row["start_frame_index"] = sample.start_frame_index
                 row["fps"] = sample.fps
@@ -837,19 +823,6 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                         "Unweighted mean of per-camera fractions of observed frames with at least "
                         "one 2D box overlap candidate; not verified 3D penetration"
                     ),
-                    "floating_object_candidates": None,
-                    "floating_object_candidates_status": "unavailable",
-                    "floating_object_candidates_reason": (
-                        "No support-surface labels, depth, or 3D geometry are configured"
-                    ),
-                    "contact_consistency_status": "unavailable",
-                    "contact_consistency_reason": (
-                        "No contact labels, calibrated robot-camera transform, or 3D geometry are available"
-                    ),
-                    "spatial_relationship_consistency_status": "unavailable",
-                    "spatial_relationship_consistency_reason": (
-                        "No task-specific object relation labels are configured"
-                    ),
                     "physical_frame_count": sample.ground_truth.shape[1],
                 }
             )
@@ -937,10 +910,6 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             {
                 "camera_index": camera,
                 "frame_pair_count": 0,
-                "cross_view_geometry_status": "unavailable",
-                "cross_view_geometry_reason": (
-                    "No camera calibration or valid cross-view correspondence metadata provided"
-                ),
             }
         )
     # Include detector-derived camera metrics alongside reference-based metrics.
@@ -1148,14 +1117,6 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         unavailable.append(
             _unavailable_group("temporal", "No valid frame pairs or optical-flow computation failed")
         )
-    if "multiview" in requested:
-        unavailable.append(
-            _unavailable_group(
-                "cross_view_geometry",
-                "Per-camera metrics are available; no calibration/correspondence was provided",
-            )
-        )
-
     config = vars(args).copy()
     config["requested_metrics"] = sorted(requested)
     config["input_paths"] = [str(path.resolve()) for path in files]
@@ -1180,7 +1141,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "lpips": any(row.get("lpips") is not None for row in frame_rows),
             "temporal": any(row.get("temporal_difference_error") is not None for row in frame_rows),
             "action": any(row.get("action_data_status") == "available" for row in interaction_rows),
-            "recorded_action": any(
+            "gripper_transition_agreement": any(
                 row.get(f"{metric}_status") in ("available", "partially_available")
                 for row in interaction_rows
                 for metric in RECORDED_ACTION_METRICS
@@ -1195,7 +1156,6 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "fid": fid_status["status"] == "available",
             "fvd": fvd_status["status"] == "available",
             "per_camera": True,
-            "cross_view_geometry": False,
             "cross_view_object_agreement": any(
                 row.get(f"{CVOA_METRICS[0]}_status")
                 in ("available", "partially_available")
@@ -1236,16 +1196,13 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "resizing": "none",
             "frame_stride": args.frame_stride,
             "action_alignment": "explicit frame_indices; safe contiguous fallback from start_frame_index",
-            "raw_action_alignment": (
-                "raw_index = 3 * source_frame_index; same-row command/observation timing "
-                "semantics are not inferred"
-            ),
+            "raw_action_alignment": "raw_index = 3 * source_frame_index",
         },
         "warnings": [
             "Pixel fidelity is not evidence of physical understanding.",
             "Image-space overlap and flow metrics are not verified 3D physical measurements.",
             "Action-motion correlation is descriptive and is not causal evidence.",
-            "Recorded command/observation consistency is not generated-video action prediction accuracy.",
+            "Gripper transition agreement is synchronized-series descriptive only, not causal evidence.",
             "Cross-view category agreement is limited by detector labels and per-view visibility; it is not object identity or 3D agreement.",
             "ResNet-50 cross-view feature similarity is a semantic proxy, not geometric correspondence.",
         ],

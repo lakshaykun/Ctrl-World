@@ -11,13 +11,8 @@ import numpy as np
 from .utils import AnnotationData, EvaluationSample
 
 RAW_FIELD_WIDTHS = {
-    "observation.state.cartesian_position": 6,
-    "action.cartesian_position": 6,
-    "observation.state.joint_position": 7,
-    "action.joint_position": 7,
     "observation.state.gripper_position": 1,
     "action.gripper_position": 1,
-    "action.joint_velocity": 7,
 }
 
 

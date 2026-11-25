@@ -722,10 +722,6 @@ def summarize_cameras(
                 {(str(row["sample_id"]), row["frame_position"]) for row in rows}
             ),
             "interaction_count": len(sample_ids),
-            "cross_view_geometry_status": "unavailable",
-            "cross_view_geometry_reason": (
-                "No camera calibration or valid cross-view correspondence metadata provided"
-            ),
         }
         for metric in metric_names:
             values = [

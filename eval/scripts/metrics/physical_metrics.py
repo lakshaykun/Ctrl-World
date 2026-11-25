@@ -72,18 +72,5 @@ def summarize_physical_candidates(
             "Fraction of observed frames with at least one 2D bounding-box overlap candidate; "
             "not a verified 3D penetration or physics violation"
         ),
-        "floating_object_candidates": None,
-        "floating_object_candidates_status": "unavailable",
-        "floating_object_candidates_reason": (
-            "No support-surface labels, depth, or 3D geometry are configured"
-        ),
-        "contact_consistency_status": "unavailable",
-        "contact_consistency_reason": (
-            "No contact labels, calibrated robot-camera transform, or 3D geometry are available"
-        ),
-        "spatial_relationship_consistency_status": "unavailable",
-        "spatial_relationship_consistency_reason": (
-            "No task-specific object relation labels are configured"
-        ),
         "physical_frame_count": frame_count,
     }

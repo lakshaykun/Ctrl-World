@@ -7,19 +7,11 @@ from typing import Any
 import numpy as np
 
 from .object_metrics import _box, _match_frame
-from ..utils import AnnotationData, metric_status
+from ..utils import AnnotationData
 
 RAW_SAMPLES_PER_VIDEO_FRAME = 3
 GRIPPER_TRANSITION_THRESHOLD = 0.1
-RECORDED_ACTION_METRICS = (
-    "cartesian_translation_command_observation_mae",
-    "cartesian_rotation_command_observation_mae",
-    "joint_position_command_observation_mae",
-    "gripper_command_observation_mae",
-    "gripper_transition_agreement",
-    "joint_velocity_consistency_correlation",
-    "joint_velocity_consistency_mae",
-)
+RECORDED_ACTION_METRICS = ("gripper_transition_agreement",)
 
 
 def _safe_correlation(left: np.ndarray, right: np.ndarray) -> float | None:
@@ -207,12 +199,6 @@ def compute_action_diagnostics(
         values["object_displacement_analysis_reason"] = (
             "Valid reference and generated object tracks aligned to the annotation frames are required"
         )
-    unavailable = metric_status(
-        "contact_timing_error",
-        "unavailable",
-        reason="No independently recorded contact timestamps or contact labels are available",
-    )
-    values["contact_timing_error"] = unavailable
     return values, frame_rows
 
 
@@ -222,25 +208,6 @@ def _raw_field_reason(annotation: AnnotationData, key: str) -> str | None:
     return annotation.raw_field_reasons.get(
         key, f"Raw annotation field {key!r} is unavailable"
     )
-
-
-def _metric_status_fields(
-    metric: str, values: list[float], expected_count: int, reason: str | None
-) -> dict[str, Any]:
-    valid_count = len(values)
-    if not valid_count:
-        status = "unavailable"
-    elif valid_count < expected_count:
-        status = "partially_available"
-    else:
-        status = "available"
-    return {
-        metric: float(np.mean(values)) if values else None,
-        f"{metric}_status": status,
-        f"{metric}_reason": reason if status != "available" else None,
-        f"{metric}_valid_count": valid_count,
-        f"{metric}_invalid_count": max(0, expected_count - valid_count),
-    }
 
 
 def compute_recorded_action_metrics(
@@ -297,36 +264,6 @@ def compute_recorded_action_metrics(
 
     frame_by_source: dict[int, dict[str, Any]] = {}
     raw_arrays = annotation.raw_fields if annotation is not None else {}
-    command_metrics = (
-        "cartesian_translation_command_observation_mae",
-        "cartesian_rotation_command_observation_mae",
-        "joint_position_command_observation_mae",
-        "gripper_command_observation_mae",
-    )
-    command_pairing_reason = (
-        annotation_reason
-        or (
-            "The annotation rows align with sampled video frames, but the repository does not "
-            "document whether action values are current commands or targets for the next "
-            "observation; command/observation MAEs are therefore not computed"
-        )
-    )
-    velocity_reason = annotation_reason
-    if velocity_reason is None and annotation is not None:
-        missing_velocity_reason = _raw_field_reason(
-            annotation, "action.joint_velocity"
-        )
-        velocity_reason = (
-            f"{missing_velocity_reason}; raw timestamps/control period and velocity units "
-            "are also absent"
-            if missing_velocity_reason
-            else "Raw timestamps/control period and velocity units are absent; the 3:1 video "
-            "sampling ratio does not establish a physical velocity interval"
-        )
-    velocity_reason = velocity_reason or (
-        "Raw timestamps/control period and velocity units are absent; the 3:1 video "
-        "sampling ratio does not establish a physical velocity interval"
-    )
 
     for frame_position, source_index in unique_frames:
         raw_index = (
@@ -347,40 +284,10 @@ def compute_recorded_action_metrics(
             ),
             "raw_index_mapping_reason": annotation_reason,
         }
-        for metric in command_metrics:
-            row[metric] = None
-            row[f"{metric}_status"] = "unavailable"
-            row[f"{metric}_reason"] = command_pairing_reason
-        row["joint_velocity_consistency_correlation"] = None
-        row["joint_velocity_consistency_correlation_status"] = "unavailable"
-        row["joint_velocity_consistency_correlation_reason"] = velocity_reason
-        row["joint_velocity_consistency_mae"] = None
-        row["joint_velocity_consistency_mae_status"] = "unavailable"
-        row["joint_velocity_consistency_mae_reason"] = (
-            row["joint_velocity_consistency_correlation_reason"]
-        )
         frame_rows.append(row)
         frame_by_source[source_index] = row
 
     expected_frame_count = len(unique_frames)
-    for metric in command_metrics:
-        metric_fields.update(
-            _metric_status_fields(
-                metric,
-                [],
-                expected_frame_count,
-                command_pairing_reason,
-            )
-        )
-
-    for metric in (
-        "joint_velocity_consistency_correlation",
-        "joint_velocity_consistency_mae",
-    ):
-        metric_fields.update(
-            _metric_status_fields(metric, [], expected_frame_count, velocity_reason)
-        )
-
     transition_values: list[float] = []
     transition_error = None
     adjacent_source_pairs = [
@@ -525,65 +432,8 @@ def compute_recorded_action_metrics(
         "available" if annotation_reason is None else "unavailable"
     )
     metric_fields["recorded_action_alignment_reason"] = annotation_reason
-    metric_fields["raw_annotation_field_status"] = {
-        key: (
-            "available"
-            if annotation is not None and key in annotation.raw_fields
-            else "unavailable"
-        )
-        for key in (
-            "observation.state.cartesian_position",
-            "action.cartesian_position",
-            "observation.state.joint_position",
-            "action.joint_position",
-            "observation.state.gripper_position",
-            "action.gripper_position",
-            "action.joint_velocity",
-        )
-    }
-    metric_fields["raw_annotation_field_reasons"] = {
-        key: (
-            None
-            if annotation is not None and key in annotation.raw_fields
-            else annotation.reason
-            if annotation is not None and annotation.status != "available"
-            else annotation.raw_field_reasons.get(key, "Raw annotation fields were not loaded")
-            if annotation is not None
-            else annotation_reason
-        )
-        for key in (
-            "observation.state.cartesian_position",
-            "action.cartesian_position",
-            "observation.state.joint_position",
-            "action.joint_position",
-            "observation.state.gripper_position",
-            "action.gripper_position",
-            "action.joint_velocity",
-        )
-    }
-    metric_fields["command_observation_temporal_alignment_status"] = (
-        "unavailable"
-    )
-    metric_fields["command_observation_temporal_alignment_reason"] = (
-        command_pairing_reason
-    )
     metric_fields["recorded_action_raw_frame_mapping"] = (
         f"raw_index = {RAW_SAMPLES_PER_VIDEO_FRAME} * source_frame_index"
     )
     metric_fields["recorded_action_deduplicated_source_frame_count"] = expected_frame_count
-    metric_fields["cartesian_rotation_error_interpretation"] = (
-        "Not computed: temporal pairing, rotation parameterization, and angle convention are undocumented"
-    )
-    metric_fields["joint_position_error_interpretation"] = (
-        "Not computed: command/observation temporal pairing is undocumented"
-    )
-    metric_fields["command_observation_interpretation"] = (
-        "Not computed: the repository does not document the temporal meaning of action "
-        "rows relative to observation rows"
-    )
     return metric_fields, frame_rows
-
-
-def unavailable_action_metrics(reason: str) -> dict[str, Any]:
-    """Build explicit unavailability information for the action metric group."""
-    return metric_status("action_consistency", "unavailable", reason=reason)

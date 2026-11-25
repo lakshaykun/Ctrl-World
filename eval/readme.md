@@ -186,54 +186,23 @@ compatible detector/tracker or consecutive matched tracks are unavailable.
 
 Correlations are descriptive only. They do not prove causal action response
 or physical correctness; image-space motion depends on camera viewpoint and
-may include camera or background movement. Contact timing, action-conditioned
-object state error, and contact correctness are unavailable without
-independently labeled contact times, object state ground truth, or calibrated
-geometry. Annotation-dependent metrics are explicitly unavailable when
-annotations are missing or cannot be aligned.
+may include camera or background movement. Annotation-dependent metrics are
+explicitly unavailable when annotations are missing or cannot be aligned.
 
-When `action` is selected, the evaluator also validates the raw robot arrays
-from the same annotation JSON: six-dimensional Cartesian position commands and
-observations, seven-dimensional joint positions and joint velocity, and scalar
-gripper commands and observations. The extractor samples video frames from raw
-rows `[::3]`, and the supplied annotations satisfy
-`raw_length = 3 * video_length - 2`; source frame `s` therefore maps to raw row
-`3*s`. Each raw field is independently checked for its required width, finite
-numeric values, and `raw_length`, so a malformed raw field does not invalidate
-the aligned `states` metrics.
+When `action` is selected, the evaluator also validates the raw gripper action
+and observed-position arrays from the same annotation JSON. Both are checked
+for finite numeric values, one scalar per row, and `raw_length`. Source frame
+`s` maps to raw row `3*s`; only these two gripper arrays are loaded for this
+diagnostic, so their absence does not invalidate the aligned `states` metrics.
 
-The following seven diagnostics are reported per interaction and at trajectory
-and dataset levels, with explicit per-frame rows when source-frame indices are
-available. Every metric carries an availability status and reason:
-
-- **Cartesian translation command/observation MAE**: unavailable unless the
-  command-to-observation temporal convention is documented. The repository
-  does not establish whether an action row is a current command or a target
-  for the next observation, so the evaluator does not assume a one-step lag.
-- **Cartesian rotation component MAE**: unavailable for the same temporal
-  reason. The six-dimensional field's rotation parameterization and angle
-  convention are also undocumented; no wrapped or geodesic rotation error is
-  inferred.
-- **Joint-position command/observation MAE** and **gripper-position
-  command/observation MAE**: unavailable for the same undocumented temporal
-  convention; same-row equality is not assumed.
-- **Gripper transition agreement**: compares command and observed gripper
-  changes between adjacent stored source frames (raw indices `3*s` and
-  `3*(s+1)`). A transition is positive/negative at a native-unit magnitude of
-  at least `0.1`; intervals with no transition in either sequence are excluded.
-  The result is the fraction of scored intervals whose transition direction
-  agrees. It is a synchronized-series diagnostic, not causal evidence that a
-  command produced an observation.
-- **Joint-velocity consistency correlation** and **joint-velocity consistency
-  MAE**: unavailable because the annotations contain no timestamps or declared
-  raw control period, and the repository does not establish the units or
-  interval represented by `action.joint_velocity`.
-
-The raw-to-video row mapping is used only for indexing, not as evidence of
-command latency, velocity units, or physical time. Rotation/joint component
-errors are not silently unwrapped or converted. The existing action-motion
-correlations remain descriptive image-space diagnostics and do not fill in
-these unavailable raw metrics.
+**Gripper transition agreement** is reported per interaction and at trajectory
+and dataset levels, with per-frame rows when source-frame indices are
+available. It compares command and observed gripper changes between adjacent
+stored source frames (raw indices `3*s` and `3*(s+1)`). A transition is
+positive or negative at a native-unit magnitude of at least `0.1`; intervals
+with no transition in either sequence are excluded. The result is the fraction
+of scored intervals whose transition direction agrees. It is a synchronized-
+series diagnostic, not causal evidence that a command produced an observation.
 
 ### Physical-consistency candidates
 
@@ -242,19 +211,14 @@ these unavailable raw metrics.
   is only an image-space overlap candidate rate.
 - Candidate CSV rows retain sample, frame, camera, object IDs, overlap IoU,
   and evidence.
-- Floating-object candidates, contact consistency, and task-specific spatial
-  relation consistency are unavailable without support-surface labels, depth,
-  camera-to-robot calibration, 3D geometry, or task-specific relation labels.
 
 Bounding-box overlap does not establish 3D penetration or collision.
 
 ### Multi-camera summaries
 
 Applicable metrics are summarized separately per camera. No pixels or tracks
-are compared across cameras as if they were geometrically aligned. Cross-view
-geometry is explicitly unavailable without calibration or validated
-correspondences. Two additional non-geometric proxies are reported when
-`multiview` is selected:
+are compared across cameras as if they were geometrically aligned. Two
+additional non-geometric proxies are reported when `multiview` is selected:
 
 - **Cross-View Object Agreement (CVOA)** compares the detected category sets
   between every camera pair at the same source frame using Jaccard similarity
@@ -269,8 +233,8 @@ correspondences. Two additional non-geometric proxies are reported when
   For each synchronized frame and camera pair, it computes cosine similarity
   between the 2048-dimensional pooled features, separately for reference and
   generated images, plus the signed difference and absolute consistency error.
-  It is an ImageNet semantic-feature proxy, not geometric correspondence,
-  object identity, or calibrated 3D consistency.
+  It is an ImageNet semantic-feature proxy, not a measure of object identity
+  or 3D spatial agreement.
 
 Both metrics require at least two views and valid source-frame indices. Pair
 scores are written to `metrics_per_camera.csv` with camera-pair IDs. Their
