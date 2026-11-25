@@ -546,7 +546,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 sample_detector_error = (
                     f"Configured detector/tracking failed for {sample_id}: {exc}"
                 )
-                detector_reason = sample_detector_error
+                
                 if "objects" in requested:
                     unavailable.append(
                         _unavailable_group(f"objects:{sample_id}", sample_detector_error)
