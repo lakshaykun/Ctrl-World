@@ -113,8 +113,8 @@ python -m eval.scripts.run_evaluation \
   --cvfc_batch_size 128 \
   --fid_batch_size 128 \
   --fvd_weights eval/weights/i3d_pretrained_400.pt \
-  --fvd_clip_len 16 \
-  --fvd_stride 16 \
+  --fvd_clip_len 64 \
+  --fvd_stride 64 \
   --max_fvd_clips_per_trajectory 128 \
   --detector eval.scripts.droid_detector:factory --tracker iou \
   --lpips_network alex \
