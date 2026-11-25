@@ -104,18 +104,19 @@ PY
 
 
 
-python -m eval.scripts.run_evaluation \
+CUDA_VISIBLE_DEVICES=0 python -m eval.scripts.run_evaluation \
   --input_dir synthetic_traj/Rollouts_replay_droid_subset/evaluation_data \
   --annotation_root dataset_example/droid_subset \
-  --output_dir eval/results/droid_subset \
+  --output_dir eval/results/droid_subset_fast \
   --metrics all \
   --device cuda:0 \
-  --cvfc_batch_size 128 \
-  --fid_batch_size 128 \
+  --cvfc_batch_size 256 \
+  --fid_batch_size 256 \
   --fvd_weights eval/weights/i3d_pretrained_400.pt \
   --fvd_clip_len 64 \
   --fvd_stride 64 \
   --max_fvd_clips_per_trajectory 128 \
-  --detector eval.scripts.droid_detector:factory --tracker iou \
+  --detector eval.scripts.droid_detector:factory \
+  --tracker iou \
   --lpips_network alex \
   --lpips_weights /home/mpcl/.conda/envs/ctrl-world/lib/python3.11/site-packages/lpips/weights/v0.1/alex.pth
