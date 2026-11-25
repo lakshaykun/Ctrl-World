@@ -1,0 +1,82 @@
+[
+  {
+    "trajectory_id": "1799",
+    "stage": "annotation",
+    "status": "invalid",
+    "reason": "Invalid DROID annotation: Annotation texts[0] is empty",
+    "source_npz_files": [
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz"
+    ]
+  },
+  {
+    "trajectory_id": "18599",
+    "stage": "reconstruction",
+    "status": "unavailable",
+    "reason": "Replay does not reach the annotation's final source frame 71; reached 48",
+    "source_npz_files": [
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_011_start_44.npz"
+    ]
+  },
+  {
+    "trajectory_id": "199",
+    "stage": "inference",
+    "status": "failed",
+    "reason": "Could not resolve Qwen3-VL model revision: RuntimeError: Installed Transformers 4.48.1 does not include Qwen3-VL support; version 4.57.0 or newer is required. The repository's main requirements.txt currently pins Transformers 4.48.1.",
+    "source_npz_files": [
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz"
+    ]
+  },
+  {
+    "trajectory_id": "899",
+    "stage": "reconstruction",
+    "status": "unavailable",
+    "reason": "Replay does not reach the annotation's final source frame 120; reached 48",
+    "source_npz_files": [
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_011_start_44.npz"
+    ]
+  }
+]

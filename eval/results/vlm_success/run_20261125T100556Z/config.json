@@ -1,0 +1,35 @@
+{
+  "evaluation": "Ctrl-World replay trajectory success classification",
+  "input_dir": "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data",
+  "dataset_dir": "/mnt/d/Lakshay/Ctrl-World/dataset_example/droid_subset",
+  "annotation_split": "val",
+  "model_name": "Qwen/Qwen3-VL-4B-Instruct",
+  "requested_model_revision": null,
+  "model_revision": null,
+  "prompt_version": "qwen3-vl-replay-success-v1",
+  "frame_sampling": {
+    "sampling_fps": 5.0,
+    "max_frames": 50,
+    "max_pixels": 1003520,
+    "chronological_sampling": "uniform over reconstructed generated-frame sequence; endpoints included",
+    "multi_camera_representation": "synchronized row-major camera grid with camera labels",
+    "image_input_interface": "ordered sequence of Qwen3-VL image message parts"
+  },
+  "processor_settings": {
+    "max_pixels_per_image": 1003520,
+    "camera_grid": "ceil(sqrt(camera_count)) columns; row-major",
+    "video_fps": "saved NPZ fps"
+  },
+  "generation": {
+    "do_sample": false,
+    "max_new_tokens": 256,
+    "max_parse_retries": 2
+  },
+  "label_mapping": {
+    "0": "failure",
+    "1": "success"
+  },
+  "uncertain_convention": "Prediction-side abstention; DROID ground truth remains binary.",
+  "cuda_required": true,
+  "run_id": "run_20261125T100556Z"
+}

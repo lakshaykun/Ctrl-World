@@ -1,0 +1,108 @@
+{
+  "total_trajectories": 4,
+  "ground_truth_labels_available": 4,
+  "eligible_trajectories": 0,
+  "correctly_classified": 0,
+  "incorrectly_classified": 0,
+  "uncertain_vlm_predictions": 0,
+  "missing_annotations": 0,
+  "invalid_annotations": 1,
+  "failed_inferences": 1,
+  "unavailable_reconstructions": 2,
+  "excluded_from_binary_metrics": 4,
+  "binary_classification_metrics": {
+    "eligible_trajectories": 0,
+    "correctly_classified": 0,
+    "incorrectly_classified": 0,
+    "excluded_from_binary_metrics": 4,
+    "uncertain_predictions_excluded": 0,
+    "accuracy": null,
+    "precision_success": null,
+    "recall_success": null,
+    "f1_success": null,
+    "macro_f1": null,
+    "weighted_f1": null,
+    "per_class": {
+      "failure": {
+        "precision": null,
+        "recall": null,
+        "f1": null,
+        "support": 0
+      },
+      "success": {
+        "precision": null,
+        "recall": null,
+        "f1": null,
+        "support": 0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "failure",
+        "success"
+      ],
+      "rows_actual_columns_predicted": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  "success_rate_comparison": {
+    "original_droid": {
+      "success_count": 0,
+      "denominator": 4,
+      "rate": 0.0
+    },
+    "vlm_predictions": {
+      "denominator": 0,
+      "success_count": 0,
+      "failure_count": 0,
+      "uncertain_count": 0,
+      "success_rate": null,
+      "failure_rate": null,
+      "uncertain_rate": null
+    },
+    "warning": "The VLM-predicted success rate is not ground-truth task performance; classification accuracy is reported separately."
+  },
+  "three_outcome_evaluation": {
+    "ground_truth_labels": [
+      "failure",
+      "success"
+    ],
+    "prediction_outcomes": [
+      "failure",
+      "success",
+      "uncertain"
+    ],
+    "rows_actual_columns_predicted": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "convention": "UNCERTAIN is a prediction-side abstention outcome. DROID annotations remain binary; there is no ground-truth uncertain class.",
+    "per_outcome_counts": {
+      "failure": 0,
+      "success": 0,
+      "uncertain": 0
+    }
+  },
+  "three_outcome_metrics": {
+    "prediction_coverage": null,
+    "selective_accuracy": null,
+    "uncertain_rate": null,
+    "note": "Standard three-class F1 is not defined because DROID supplies no ground-truth uncertain class. The matrix treats uncertainty as abstention."
+  }
+}

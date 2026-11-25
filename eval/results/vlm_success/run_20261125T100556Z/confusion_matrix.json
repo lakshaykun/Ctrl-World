@@ -1,0 +1,47 @@
+{
+  "binary_decisions": {
+    "labels": [
+      "failure",
+      "success"
+    ],
+    "rows_actual_columns_predicted": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  "three_outcome_abstention_matrix": {
+    "ground_truth_labels": [
+      "failure",
+      "success"
+    ],
+    "prediction_outcomes": [
+      "failure",
+      "success",
+      "uncertain"
+    ],
+    "rows_actual_columns_predicted": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "convention": "UNCERTAIN is a prediction-side abstention outcome. DROID annotations remain binary; there is no ground-truth uncertain class.",
+    "per_outcome_counts": {
+      "failure": 0,
+      "success": 0,
+      "uncertain": 0
+    }
+  }
+}

@@ -1,12 +1,15 @@
 {
   "input_dir": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data",
   "output_dir": "eval/results/droid_subset",
+  "resume_run": null,
+  "checkpoint_every": 1,
+  "force": false,
   "annotation_root": "dataset_example/droid_subset",
   "metrics": "all",
   "device": "cuda:0",
   "batch_size": 16,
-  "cvfc_batch_size": 128,
-  "fid_batch_size": 128,
+  "cvfc_batch_size": 256,
+  "fid_batch_size": 256,
   "frame_stride": 1,
   "save_visualizations": false,
   "save_comparison_videos": false,
@@ -82,5 +85,18 @@
     "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_010_start_40.npz",
     "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_011_start_44.npz"
   ],
-  "run_id": "run_20261125T013151Z"
+  "run_id": "run_20261125T034215Z",
+  "checkpointing": {
+    "enabled": true,
+    "checkpoint_every": 1,
+    "resume_run": false,
+    "force": false,
+    "schema_version": 1,
+    "run_metadata_file": "run_metadata.json"
+  },
+  "global_metric_resume_policy": {
+    "fid": "recomputed over all current samples on every run/resume",
+    "fvd": "recomputed over the complete current input set on every run/resume"
+  },
+  "global_metric_identity": "118c2c776bb4e3b96b189e5fd507965a6ee00d0ab75a8913ee97abcae2931447"
 }

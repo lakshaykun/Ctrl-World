@@ -1,0 +1,183 @@
+{
+  "checkpoint_schema_version": 1,
+  "run_id": "run_20261125T034215Z",
+  "updated_at_utc": "2026-11-25T03:44:21.355121+00:00",
+  "configuration": {
+    "input_dir": "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data",
+    "annotation_root": "/mnt/d/Lakshay/Ctrl-World/dataset_example/droid_subset",
+    "metrics": "all",
+    "device": "cuda:0",
+    "batch_size": 16,
+    "cvfc_batch_size": 256,
+    "fid_batch_size": 256,
+    "frame_stride": 1,
+    "save_visualizations": false,
+    "save_comparison_videos": false,
+    "detector": "eval.scripts.droid_detector:factory",
+    "tracker": "iou",
+    "lpips_weights": "/home/mpcl/.conda/envs/ctrl-world/lib/python3.11/site-packages/lpips/weights/v0.1/alex.pth",
+    "lpips_network": "alex",
+    "fid_weights": null,
+    "fvd_features": null,
+    "fvd_weights": "eval/weights/i3d_pretrained_400.pt",
+    "fvd_clip_len": 64,
+    "fvd_stride": 64,
+    "max_fvd_clips_per_trajectory": 128,
+    "fvd_extractor_name": null,
+    "requested_metrics": [
+      "action",
+      "fid",
+      "fvd",
+      "lpips",
+      "multiview",
+      "objects",
+      "physical",
+      "temporal",
+      "visual"
+    ],
+    "input_paths": [
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_011_start_44.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_001_start_4.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_002_start_8.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_006_start_24.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_007_start_28.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_008_start_32.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_009_start_36.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_010_start_40.npz",
+      "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_011_start_44.npz"
+    ],
+    "global_metric_inputs": {
+      "fid": {
+        "weights": null,
+        "batch_size": 256,
+        "device": "cuda:0",
+        "policy": "recomputed from every current sample on each run or resume",
+        "resolved_weights": {
+          "path": "/home/mpcl/.cache/torch/hub/checkpoints/weights-inception-2015-12-05-6726825d.pth",
+          "exists": true,
+          "sha256": "6726825d0af5f729cebd5821db510b11b1cfad8faad88a03f1befd49fb9129b2"
+        }
+      },
+      "fvd": {
+        "features": null,
+        "weights": {
+          "path": "/mnt/d/Lakshay/Ctrl-World/eval/weights/i3d_pretrained_400.pt",
+          "exists": true,
+          "sha256": "55095f049e706479d48e221adcdb145b2b9dc930ba28b081ed72367ffaa32343"
+        },
+        "extractor_name": null,
+        "clip_length": 64,
+        "clip_stride": 64,
+        "max_clips_per_trajectory_camera": 128,
+        "frame_stride": 1,
+        "device": "cuda:0",
+        "policy": "recomputed from the complete current input set on each run or resume"
+      }
+    }
+  },
+  "sample_cache_configuration": {
+    "implementation_version": 1,
+    "requested_sample_metrics": [
+      "action",
+      "lpips",
+      "multiview",
+      "objects",
+      "physical",
+      "temporal",
+      "visual"
+    ],
+    "frame_stride": 1,
+    "device": "cuda:0",
+    "lpips": {
+      "network": "alex",
+      "weights": {
+        "path": "/home/mpcl/.conda/envs/ctrl-world/lib/python3.11/site-packages/lpips/weights/v0.1/alex.pth",
+        "exists": true,
+        "sha256": "df73285e35b22355a2df87cdb6b70b343713b667eddbda73e1977e0c860835c0"
+      },
+      "batch_size": 16,
+      "available": true,
+      "unavailable_reason": null
+    },
+    "object_and_multiview_detector": {
+      "source": {
+        "factory": "eval.scripts.droid_detector:factory",
+        "module": "eval.scripts.droid_detector",
+        "module_file": {
+          "path": "/mnt/d/Lakshay/Ctrl-World/eval/scripts/droid_detector.py",
+          "exists": true,
+          "sha256": "fa0fe600640e245b976614aac273ff2146cd6b2e9a68178461e2dcf58d560da8"
+        }
+      },
+      "loaded": true,
+      "unavailable_reason": null,
+      "tracker": "iou",
+      "tracking_reason": null
+    },
+    "multiview": {
+      "cvfc_batch_size": 256,
+      "cvfc_available": true,
+      "cvfc_unavailable_reason": null
+    },
+    "annotations_enabled": true,
+    "save_visualizations": false,
+    "save_comparison_videos": false
+  },
+  "global_metric_resume_policy": {
+    "fid": "recompute from all currently discovered samples on every run/resume",
+    "fvd": "recompute from all current input files or the current feature file"
+  },
+  "global_metric_identity": "118c2c776bb4e3b96b189e5fd507965a6ee00d0ab75a8913ee97abcae2931447",
+  "input_sample_count": 48,
+  "resolved_global_weights": {
+    "fid": {
+      "path": "/home/mpcl/.cache/torch/hub/checkpoints/weights-inception-2015-12-05-6726825d.pth",
+      "exists": true,
+      "sha256": "6726825d0af5f729cebd5821db510b11b1cfad8faad88a03f1befd49fb9129b2"
+    },
+    "fvd": {
+      "path": "/mnt/d/Lakshay/Ctrl-World/eval/weights/i3d_pretrained_400.pt",
+      "exists": true,
+      "sha256": "55095f049e706479d48e221adcdb145b2b9dc930ba28b081ed72367ffaa32343"
+    }
+  }
+}
