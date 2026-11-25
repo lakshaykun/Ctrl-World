@@ -1,0 +1,5363 @@
+{
+  "evaluation_timestamp_utc": "2026-11-25T01:34:10.196898+00:00",
+  "run_id": "run_20261125T013151Z",
+  "input_dir": "/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data",
+  "annotation_root": "/mnt/d/Lakshay/Ctrl-World/dataset_example/droid_subset",
+  "number_of_discovered_samples": 48,
+  "number_of_valid_samples": 48,
+  "number_of_invalid_samples": 0,
+  "available_metrics": {
+    "pixel_and_ssim": true,
+    "lpips": true,
+    "temporal": true,
+    "action": true,
+    "gripper_transition_agreement": true,
+    "objects": true,
+    "physical_candidates": true,
+    "fid": true,
+    "fvd": false,
+    "per_camera": true,
+    "cross_view_object_agreement": true,
+    "cross_view_feature_consistency": true
+  },
+  "unavailable_metrics": [
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_000_start_0.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_000_start_0.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_001_start_4.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_001_start_4.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_002_start_8.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_002_start_8.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_003_start_12.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_003_start_12.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_004_start_16.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_004_start_16.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_005_start_20.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_005_start_20.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_007_start_28.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_007_start_28.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_008_start_32.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_008_start_32.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No adjacent source-frame intervals were available for transition comparison"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No adjacent source-frame intervals were available for transition comparison"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_000_start_0.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_000_start_0.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_001_start_4.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_001_start_4.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_002_start_8.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_002_start_8.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_003_start_12.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_003_start_12.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_004_start_16.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_004_start_16.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_005_start_20.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_005_start_20.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_008_start_32.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_008_start_32.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_009_start_36.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_009_start_36.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_010_start_40.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_010_start_40.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_011_start_44.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_011_start_44.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_002_start_8.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_002_start_8.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_003_start_12.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_003_start_12.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_007_start_28.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_007_start_28.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No adjacent source-frame intervals were available for transition comparison"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No adjacent source-frame intervals were available for transition comparison"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No adjacent source-frame intervals were available for transition comparison"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No adjacent source-frame intervals were available for transition comparison"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_001_start_4.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_001_start_4.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_002_start_8.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_002_start_8.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "metric": "physical:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "One or more cameras had no generated object detections"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_008_start_32.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_008_start_32.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_009_start_36.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_009_start_36.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric_group": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_010_start_40.npz",
+      "metric": "gripper_transition_agreement:/mnt/d/Lakshay/Ctrl-World/synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_010_start_40.npz",
+      "status": "unavailable",
+      "value": null,
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    {
+      "metric": "fvd",
+      "status": "unavailable",
+      "value": null,
+      "reason": "FVD requires at least two clips per distribution; only 0 eligible clips were reconstructed",
+      "mode": "video_i3d",
+      "feature_extractor": "cd-fvd I3D-400",
+      "weights_path": "eval/weights/i3d_pretrained_400.pt",
+      "frame_stride": 1,
+      "real_clip_count": 0,
+      "generated_clip_count": 0,
+      "clip_length": 64,
+      "clip_stride": 64,
+      "max_clips_per_trajectory_camera": 128,
+      "clip_count": 0,
+      "metadata_read_failures": 0,
+      "sample_load_failures": 0,
+      "samples_without_source_indices": 0,
+      "negative_source_indices_skipped": 0,
+      "duplicate_frame_indices_dropped": 204,
+      "segments_too_short": 12
+    }
+  ],
+  "aggregated_metrics": {
+    "action_image_motion_correlation": {
+      "mean": 0.33861486103104843,
+      "median": 0.6469777418988409,
+      "standard_deviation": 0.6487609677235087,
+      "minimum": -0.989540606537097,
+      "maximum": 0.9997673219881829,
+      "valid_count": 42,
+      "invalid_count": 6
+    },
+    "action_mean_rotation_step": {
+      "mean": 0.39843347321284345,
+      "median": 0.03996674132619632,
+      "standard_deviation": 0.6582712883929703,
+      "minimum": 0.0,
+      "maximum": 1.6779236182285304,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "action_mean_translation_step": {
+      "mean": 0.01972564805732588,
+      "median": 0.02164177483935684,
+      "standard_deviation": 0.014423431869974931,
+      "minimum": 0.0,
+      "maximum": 0.04785255740747914,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "action_object_displacement_correlation": {
+      "mean": 0.026844264302397777,
+      "median": 0.09368564339493225,
+      "standard_deviation": 0.47989284289277767,
+      "minimum": -1.0,
+      "maximum": 0.9999999999999999,
+      "valid_count": 28,
+      "invalid_count": 20
+    },
+    "action_object_displacement_error": {
+      "mean": 0.0033363825611715256,
+      "median": 0.002936798273635808,
+      "standard_deviation": 0.0028471253891918596,
+      "minimum": 0.00047618474938007643,
+      "maximum": 0.011759697502205504,
+      "valid_count": 28,
+      "invalid_count": 20
+    },
+    "cross_view_feature_consistency_error": {
+      "mean": 0.03633963813384374,
+      "median": 0.03188283244768778,
+      "standard_deviation": 0.02090611372097433,
+      "minimum": 0.0015187462170918782,
+      "maximum": 0.13261880477269491,
+      "valid_count": 172,
+      "invalid_count": 0,
+      "status": "available"
+    },
+    "cross_view_feature_similarity_difference": {
+      "mean": -0.0030502091313517376,
+      "median": -0.005864461263020833,
+      "standard_deviation": 0.032034821149087116,
+      "minimum": -0.1013098806142807,
+      "maximum": 0.123698224623998,
+      "valid_count": 172,
+      "invalid_count": 0,
+      "status": "available"
+    },
+    "cross_view_feature_similarity_generated": {
+      "mean": 0.48209717872646435,
+      "median": 0.47151289880275726,
+      "standard_deviation": 0.05744158988197769,
+      "minimum": 0.3209587832291921,
+      "maximum": 0.6131407618522644,
+      "valid_count": 172,
+      "invalid_count": 0,
+      "status": "available"
+    },
+    "cross_view_feature_similarity_reference": {
+      "mean": 0.4851473878578161,
+      "median": 0.47615503271420795,
+      "standard_deviation": 0.050635649009973874,
+      "minimum": 0.38486722608407337,
+      "maximum": 0.6179547309875488,
+      "valid_count": 172,
+      "invalid_count": 0,
+      "status": "available"
+    },
+    "cross_view_object_agreement_difference": {
+      "mean": 0.010003306878306877,
+      "median": 0.0,
+      "standard_deviation": 0.12002257186889469,
+      "minimum": -0.375,
+      "maximum": 1.0,
+      "valid_count": 168,
+      "invalid_count": 4,
+      "status": "partially_available",
+      "reason": "One or more camera pairs had no score"
+    },
+    "cross_view_object_agreement_generated": {
+      "mean": 0.022817460317460316,
+      "median": 0.0,
+      "standard_deviation": 0.09624038564540414,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "valid_count": 168,
+      "invalid_count": 4,
+      "status": "partially_available",
+      "reason": "One or more camera pairs had no score"
+    },
+    "cross_view_object_agreement_reference": {
+      "mean": 0.017926356589147284,
+      "median": 0.0,
+      "standard_deviation": 0.07329034859245163,
+      "minimum": 0.0,
+      "maximum": 0.4444444444444444,
+      "valid_count": 172,
+      "invalid_count": 0,
+      "status": "partially_available",
+      "reason": "One or more camera pairs had no score"
+    },
+    "gripper_transition_agreement": {
+      "mean": 0.5714285714285714,
+      "median": 1.0,
+      "standard_deviation": 0.4948716593053935,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "valid_count": 21,
+      "invalid_count": 141,
+      "status": "partially_available",
+      "reason": "No command or observed gripper transition exceeded the 0.1 native-unit threshold"
+    },
+    "hallucination_severity_score": {
+      "mean": 0.1115058587108191,
+      "median": 0.08372191039943203,
+      "standard_deviation": 0.08788931335526136,
+      "minimum": 0.0018165476358944943,
+      "maximum": 0.32923734995527887,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "joint_mean_step": {
+      "mean": 0.09626845488091605,
+      "median": 0.10398064609576786,
+      "standard_deviation": 0.06282974298591135,
+      "minimum": 0.0,
+      "maximum": 0.22302834505035957,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "lpips": {
+      "mean": 0.10080099850100749,
+      "median": 0.10570673681795598,
+      "standard_deviation": 0.04113561358531748,
+      "minimum": 0.010712593568799396,
+      "maximum": 0.16722183426221213,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "lpips_max": {
+      "mean": 0.2368227361390988,
+      "median": 0.2638850659132004,
+      "standard_deviation": 0.10536840692198253,
+      "minimum": 0.02003318816423416,
+      "maximum": 0.4375952482223511,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "lpips_median": {
+      "mean": 0.05074482436369484,
+      "median": 0.04763216897845268,
+      "standard_deviation": 0.022333014616237448,
+      "minimum": 0.01097031682729721,
+      "maximum": 0.09977826476097107,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "lpips_min": {
+      "mean": 0.03554765754718877,
+      "median": 0.03835321217775345,
+      "standard_deviation": 0.015475553367151795,
+      "minimum": 0.0018225492676720023,
+      "maximum": 0.06497368961572647,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "lpips_std": {
+      "mean": 0.08149346586994784,
+      "median": 0.09127711948194951,
+      "standard_deviation": 0.046685867205770795,
+      "minimum": 0.004944193413021913,
+      "maximum": 0.18012639529415717,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "mse": {
+      "mean": 517.1225335165896,
+      "median": 573.9230407262731,
+      "standard_deviation": 233.51386011785857,
+      "minimum": 17.560290436921303,
+      "maximum": 1072.688029152199,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "mse_max": {
+      "mean": 1205.0819265860098,
+      "median": 1323.6369493272568,
+      "standard_deviation": 597.9449785282155,
+      "minimum": 29.719498697916666,
+      "maximum": 2784.316916232639,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "mse_median": {
+      "mean": 312.0317396375868,
+      "median": 341.4161349826389,
+      "standard_deviation": 159.83305316484243,
+      "minimum": 22.742876519097223,
+      "maximum": 702.0223741319444,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "mse_min": {
+      "mean": 179.3419522885923,
+      "median": 182.26075575086804,
+      "standard_deviation": 100.94719639025848,
+      "minimum": 1.7438530815972222,
+      "maximum": 375.7517903645833,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "mse_std": {
+      "mean": 385.775385494708,
+      "median": 376.8347467300371,
+      "standard_deviation": 231.84722370958556,
+      "minimum": 10.589352661296408,
+      "maximum": 1103.9123448335624,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "object_generated_detections": {
+      "mean": 5.798611111111112,
+      "median": 5.333333333333333,
+      "standard_deviation": 2.449243631671613,
+      "minimum": 1.0,
+      "maximum": 11.333333333333334,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "object_hallucination_rate": {
+      "mean": 0.5326349881242273,
+      "median": 0.5158730158730158,
+      "standard_deviation": 0.2199183420611414,
+      "minimum": 0.09375,
+      "maximum": 0.9523809523809524,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "object_matched_detections": {
+      "mean": 3.402777777777778,
+      "median": 3.833333333333333,
+      "standard_deviation": 1.9637435118280884,
+      "minimum": 0.3333333333333333,
+      "maximum": 7.0,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "object_persistence_score": {
+      "mean": 0.4427649166136008,
+      "median": 0.44999999999999996,
+      "standard_deviation": 0.22953939194831346,
+      "minimum": 0.037037037037037035,
+      "maximum": 0.9545454545454546,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "object_reference_detections": {
+      "mean": 6.423611111111111,
+      "median": 6.166666666666666,
+      "standard_deviation": 2.000855816123086,
+      "minimum": 2.3333333333333335,
+      "maximum": 9.666666666666666,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "object_trajectory_error": {
+      "mean": 0.01350139333324603,
+      "median": 0.011699872155046729,
+      "standard_deviation": 0.008914345206096535,
+      "minimum": 0.0010021071760747402,
+      "maximum": 0.03870301340861419,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "optical_flow_difference": {
+      "mean": 0.9887490818933297,
+      "median": 1.0719463950462682,
+      "standard_deviation": 0.6377129986524847,
+      "minimum": 0.06071085739195157,
+      "maximum": 2.105068688590955,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "optical_flow_difference_max": {
+      "mean": 3.519804215160091,
+      "median": 3.5764658602790336,
+      "standard_deviation": 2.629371687249952,
+      "minimum": 0.10110947105910967,
+      "maximum": 9.84502900129995,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "optical_flow_difference_median": {
+      "mean": 0.35712162890869054,
+      "median": 0.35004005148643713,
+      "standard_deviation": 0.2257811676468427,
+      "minimum": 0.051945990038805234,
+      "maximum": 1.1146724629025495,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "optical_flow_difference_min": {
+      "mean": 0.13984011608287886,
+      "median": 0.12161712846567974,
+      "standard_deviation": 0.07940141608766296,
+      "minimum": 0.03580307056665812,
+      "maximum": 0.38444812730252287,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "optical_flow_difference_std": {
+      "mean": 1.14286155967789,
+      "median": 1.1677106376325395,
+      "standard_deviation": 0.8622244251371437,
+      "minimum": 0.018513913454247136,
+      "maximum": 2.7091902600103386,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "physical_violation_rate": {
+      "mean": 0.13888888888888887,
+      "median": 0.1,
+      "standard_deviation": 0.14261664058881596,
+      "minimum": 0.0,
+      "maximum": 0.4,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "position_anomaly_rate": {
+      "mean": 0.0,
+      "median": 0.0,
+      "standard_deviation": 0.0,
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "valid_count": 47,
+      "invalid_count": 1
+    },
+    "psnr": {
+      "mean": 23.204534502280733,
+      "median": 21.970696367922173,
+      "standard_deviation": 3.640865355589819,
+      "minimum": 19.89527342970346,
+      "maximum": 36.949494748786606,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "psnr_max": {
+      "mean": 27.350485594909255,
+      "median": 25.523926357278,
+      "standard_deviation": 5.339360011577212,
+      "minimum": 22.381793022979686,
+      "maximum": 45.71570467736579,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "psnr_median": {
+      "mean": 24.164038949881256,
+      "median": 22.797965253296226,
+      "standard_deviation": 3.4957542144057174,
+      "minimum": 19.667294071324147,
+      "maximum": 34.56234967474651,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "psnr_min": {
+      "mean": 18.178766985784588,
+      "median": 16.91311492700674,
+      "standard_deviation": 3.38638289250613,
+      "minimum": 13.68361694894247,
+      "maximum": 33.400388813030844,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "psnr_std": {
+      "mean": 3.248138587504519,
+      "median": 3.3333081807890688,
+      "standard_deviation": 1.0781047250444393,
+      "minimum": 1.3492595919996102,
+      "maximum": 5.535588175685207,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "ssim": {
+      "mean": 0.839782683579199,
+      "median": 0.8222074102502759,
+      "standard_deviation": 0.06051180025271697,
+      "minimum": 0.7426964873148634,
+      "maximum": 0.9791718548425411,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "ssim_max": {
+      "mean": 0.9174242783981136,
+      "median": 0.9113887327151657,
+      "standard_deviation": 0.035121891421789245,
+      "minimum": 0.8658882564235894,
+      "maximum": 0.994110541408633,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "ssim_median": {
+      "mean": 0.8898953680519309,
+      "median": 0.8802966784516262,
+      "standard_deviation": 0.0323911504990851,
+      "minimum": 0.8437434619470614,
+      "maximum": 0.9766853021822622,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "ssim_min": {
+      "mean": 0.6948987138768071,
+      "median": 0.6827013008564358,
+      "standard_deviation": 0.1330279577593214,
+      "minimum": 0.4253520218491109,
+      "maximum": 0.9682475498564095,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "ssim_std": {
+      "mean": 0.08764078473898074,
+      "median": 0.08699293863026639,
+      "standard_deviation": 0.051420725493709636,
+      "minimum": 0.00850860128917458,
+      "maximum": 0.20627119207755235,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "temporal_consistency_score": {
+      "mean": 0.9940898345153664,
+      "median": 1.0,
+      "standard_deviation": 0.028613991576619865,
+      "minimum": 0.8333333333333334,
+      "maximum": 1.0,
+      "valid_count": 47,
+      "invalid_count": 1
+    },
+    "temporal_difference_error": {
+      "mean": 6.829657736130886,
+      "median": 7.156621386607489,
+      "standard_deviation": 3.129808014921012,
+      "minimum": 1.2503359268109004,
+      "maximum": 11.54915044705073,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "temporal_difference_error_max": {
+      "mean": 15.015109777450562,
+      "median": 16.700736045837402,
+      "standard_deviation": 7.755720410428066,
+      "minimum": 2.209510564804077,
+      "maximum": 29.75914764404297,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "temporal_difference_error_median": {
+      "mean": 4.950000292311112,
+      "median": 5.474252700805664,
+      "standard_deviation": 2.2501818818318244,
+      "minimum": 1.1136691570281982,
+      "maximum": 9.710481643676758,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "temporal_difference_error_min": {
+      "mean": 2.874548450112343,
+      "median": 2.7017903327941895,
+      "standard_deviation": 1.4517352438081377,
+      "minimum": 0.8206977248191833,
+      "maximum": 5.951171875,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "temporal_difference_error_std": {
+      "mean": 4.154759217139655,
+      "median": 4.139050615159695,
+      "standard_deviation": 2.646424875866862,
+      "minimum": 0.2892854348927257,
+      "maximum": 9.767142118559043,
+      "valid_count": 48,
+      "invalid_count": 0
+    },
+    "tracked_object_count_mean": {
+      "mean": 1.570833333333333,
+      "median": 1.7,
+      "standard_deviation": 1.3999937995894443,
+      "minimum": 0.0,
+      "maximum": 4.6,
+      "valid_count": 48,
+      "invalid_count": 0
+    }
+  },
+  "camera_wise_results": [
+    {
+      "camera_index": 0,
+      "frame_pair_count": 240,
+      "interaction_count": 48,
+      "mse": 262.96418906882957,
+      "mse_median": 268.0322108289931,
+      "mse_std": 110.13552729917421,
+      "mse_min": 27.434009331597224,
+      "mse_max": 445.4247189670139,
+      "mse_valid_count": 48,
+      "mse_invalid_count": 0,
+      "psnr": 24.573975873895538,
+      "psnr_median": 23.84985159985,
+      "psnr_std": 2.716971348464076,
+      "psnr_min": 21.645434669459554,
+      "psnr_max": 33.76665919348649,
+      "psnr_valid_count": 48,
+      "psnr_invalid_count": 0,
+      "ssim": 0.8923639951897876,
+      "ssim_median": 0.8850020225103739,
+      "ssim_std": 0.03114682219013365,
+      "ssim_min": 0.8459229648410027,
+      "ssim_max": 0.9704509175207896,
+      "ssim_valid_count": 48,
+      "ssim_invalid_count": 0,
+      "lpips": 0.04163172480960687,
+      "lpips_median": 0.0456777710467577,
+      "lpips_std": 0.012125002305641874,
+      "lpips_min": 0.009768278524279594,
+      "lpips_max": 0.06578236520290374,
+      "lpips_valid_count": 48,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 3.74592576486369,
+      "temporal_difference_error_median": 3.949249356985092,
+      "temporal_difference_error_std": 1.6856984458757664,
+      "temporal_difference_error_min": 1.1041436195373535,
+      "temporal_difference_error_max": 8.126116275787354,
+      "temporal_difference_error_valid_count": 48,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 0.2182973798639413,
+      "optical_flow_difference_median": 0.21403110089843075,
+      "optical_flow_difference_std": 0.12263301280174298,
+      "optical_flow_difference_min": 0.05843368269672829,
+      "optical_flow_difference_max": 0.5319112693307526,
+      "optical_flow_difference_valid_count": 48,
+      "optical_flow_difference_invalid_count": 0,
+      "object_persistence_score": 0.6014194116063609,
+      "object_hallucination_rate": 0.29160752800753137,
+      "identity_switch_count": 0.0,
+      "object_trajectory_error": 0.0045846618645014065,
+      "position_anomaly_rate": 0.0,
+      "temporal_consistency_score": 1.0,
+      "hallucination_severity_score": 0.03382478141384304,
+      "object_reference_detections": 8.875,
+      "object_generated_detections": 7.854166666666667,
+      "object_matched_detections": 6.354166666666667,
+      "object_metrics_status": "partially_available",
+      "object_metrics_reason": "One or more interaction-camera detector outputs were unavailable",
+      "physical_violation_candidate_count": 50,
+      "physical_violation_rate": 0.2611111111111111,
+      "physical_violation_rate_valid_count": 36,
+      "physical_violation_rate_invalid_count": 12,
+      "physical_violation_rate_status": "partially_available"
+    },
+    {
+      "camera_index": 1,
+      "frame_pair_count": 240,
+      "interaction_count": 48,
+      "mse": 301.5719239863643,
+      "mse_median": 230.89548448350695,
+      "mse_std": 222.67059913045634,
+      "mse_min": 19.592248263888887,
+      "mse_max": 880.4633865017361,
+      "mse_valid_count": 48,
+      "mse_invalid_count": 0,
+      "psnr": 24.909957292074935,
+      "psnr_median": 24.52309167755312,
+      "psnr_std": 4.109832687736919,
+      "psnr_min": 18.693464892934198,
+      "psnr_max": 35.934810457358864,
+      "psnr_valid_count": 48,
+      "psnr_invalid_count": 0,
+      "ssim": 0.8955093744041914,
+      "ssim_median": 0.887019192538715,
+      "ssim_std": 0.03741145420621582,
+      "ssim_min": 0.8351389386621063,
+      "ssim_max": 0.9800159885481546,
+      "ssim_valid_count": 48,
+      "ssim_invalid_count": 0,
+      "lpips": 0.04904097814918107,
+      "lpips_median": 0.046171084418892866,
+      "lpips_std": 0.023558374450699054,
+      "lpips_min": 0.008313904027454555,
+      "lpips_max": 0.10009157955646515,
+      "lpips_valid_count": 48,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 5.193807541082303,
+      "temporal_difference_error_median": 5.366311967372894,
+      "temporal_difference_error_std": 2.29280511989233,
+      "temporal_difference_error_min": 1.6847588121891022,
+      "temporal_difference_error_max": 9.94958508014679,
+      "temporal_difference_error_valid_count": 48,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 0.36839278340350906,
+      "optical_flow_difference_median": 0.3170549297359088,
+      "optical_flow_difference_std": 0.24378466077637717,
+      "optical_flow_difference_min": 0.0797462927966785,
+      "optical_flow_difference_max": 1.138260777003522,
+      "optical_flow_difference_valid_count": 48,
+      "optical_flow_difference_invalid_count": 0,
+      "object_persistence_score": 0.39791673969305547,
+      "object_hallucination_rate": 0.6079318348079285,
+      "identity_switch_count": 0.0,
+      "object_trajectory_error": 0.012494754490241327,
+      "position_anomaly_rate": 0.0,
+      "temporal_consistency_score": 1.0,
+      "hallucination_severity_score": 0.09200633562085524,
+      "object_reference_detections": 6.25,
+      "object_generated_detections": 6.520833333333333,
+      "object_matched_detections": 3.0208333333333335,
+      "object_metrics_status": "partially_available",
+      "object_metrics_reason": "One or more interaction-camera detector outputs were unavailable",
+      "physical_violation_candidate_count": 33,
+      "physical_violation_rate": 0.13043478260869565,
+      "physical_violation_rate_valid_count": 46,
+      "physical_violation_rate_invalid_count": 2,
+      "physical_violation_rate_status": "partially_available"
+    },
+    {
+      "camera_index": 2,
+      "frame_pair_count": 240,
+      "interaction_count": 48,
+      "mse": 986.8314874945746,
+      "mse_median": 1058.9113997395834,
+      "mse_std": 585.9626745226818,
+      "mse_min": 5.654613715277778,
+      "mse_max": 2629.3627625868057,
+      "mse_valid_count": 48,
+      "mse_invalid_count": 0,
+      "psnr": 20.129670340871723,
+      "psnr_median": 17.99732181290961,
+      "psnr_std": 5.492207639895438,
+      "psnr_min": 13.937182940128867,
+      "psnr_max": 41.14701459551446,
+      "psnr_valid_count": 48,
+      "psnr_invalid_count": 0,
+      "ssim": 0.7314746811436178,
+      "ssim_median": 0.6978765681392931,
+      "ssim_std": 0.14443136393946296,
+      "ssim_min": 0.4518137018001509,
+      "ssim_max": 0.9870486584586793,
+      "ssim_valid_count": 48,
+      "ssim_invalid_count": 0,
+      "lpips": 0.2117302925442345,
+      "lpips_median": 0.22679761350154876,
+      "lpips_std": 0.10876636859200055,
+      "lpips_min": 0.009551642742007972,
+      "lpips_max": 0.4215226054191589,
+      "lpips_valid_count": 48,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 11.549239902446667,
+      "temporal_difference_error_median": 12.84827670454979,
+      "temporal_difference_error_std": 6.7605722758235745,
+      "temporal_difference_error_min": 0.906662330031395,
+      "temporal_difference_error_max": 24.705182552337646,
+      "temporal_difference_error_valid_count": 48,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 2.379557082412538,
+      "optical_flow_difference_median": 2.3172706900846336,
+      "optical_flow_difference_std": 1.7480889687274836,
+      "optical_flow_difference_min": 0.043952596682447935,
+      "optical_flow_difference_max": 5.518057312027636,
+      "optical_flow_difference_valid_count": 48,
+      "optical_flow_difference_invalid_count": 0,
+      "object_persistence_score": 0.29442554799697657,
+      "object_hallucination_rate": 0.674672619047619,
+      "identity_switch_count": 0.0,
+      "object_trajectory_error": 0.030136503470059715,
+      "position_anomaly_rate": 0.0,
+      "temporal_consistency_score": 0.9652777777777777,
+      "hallucination_severity_score": 0.20943856280611522,
+      "object_reference_detections": 4.145833333333333,
+      "object_generated_detections": 3.0208333333333335,
+      "object_matched_detections": 0.8333333333333334,
+      "object_metrics_status": "partially_available",
+      "object_metrics_reason": "One or more interaction-camera detector outputs were unavailable",
+      "physical_violation_candidate_count": 13,
+      "physical_violation_rate": 0.065,
+      "physical_violation_rate_valid_count": 40,
+      "physical_violation_rate_invalid_count": 8,
+      "physical_violation_rate_status": "partially_available"
+    }
+  ],
+  "cross_view_camera_pair_results": [
+    {
+      "camera_index": null,
+      "camera_pair": "0-1",
+      "camera_a": 0,
+      "camera_b": 1,
+      "source_frame_count": 172,
+      "trajectory_count": 4,
+      "cross_view_object_agreement_reference": 0.007889546351084813,
+      "cross_view_object_agreement_reference_median": 0.0,
+      "cross_view_object_agreement_reference_std": 0.059613732779910895,
+      "cross_view_object_agreement_reference_min": 0.0,
+      "cross_view_object_agreement_reference_max": 0.5,
+      "cross_view_object_agreement_reference_valid_count": 169,
+      "cross_view_object_agreement_reference_invalid_count": 3,
+      "cross_view_object_agreement_reference_status": "partially_available",
+      "cross_view_object_agreement_generated": 0.03958333333333333,
+      "cross_view_object_agreement_generated_median": 0.0,
+      "cross_view_object_agreement_generated_std": 0.17203590952666442,
+      "cross_view_object_agreement_generated_min": 0.0,
+      "cross_view_object_agreement_generated_max": 1.0,
+      "cross_view_object_agreement_generated_valid_count": 160,
+      "cross_view_object_agreement_generated_invalid_count": 12,
+      "cross_view_object_agreement_generated_status": "partially_available",
+      "cross_view_object_agreement_difference": 0.03164556962025317,
+      "cross_view_object_agreement_difference_median": 0.0,
+      "cross_view_object_agreement_difference_std": 0.1676153367148465,
+      "cross_view_object_agreement_difference_min": -0.5,
+      "cross_view_object_agreement_difference_max": 1.0,
+      "cross_view_object_agreement_difference_valid_count": 158,
+      "cross_view_object_agreement_difference_invalid_count": 14,
+      "cross_view_object_agreement_difference_status": "partially_available",
+      "cross_view_feature_similarity_reference": 0.6376879667473394,
+      "cross_view_feature_similarity_reference_median": 0.6408887207508087,
+      "cross_view_feature_similarity_reference_std": 0.06290886683050365,
+      "cross_view_feature_similarity_reference_min": 0.4970652759075165,
+      "cross_view_feature_similarity_reference_max": 0.7843746542930603,
+      "cross_view_feature_similarity_reference_valid_count": 172,
+      "cross_view_feature_similarity_reference_invalid_count": 0,
+      "cross_view_feature_similarity_reference_status": "available",
+      "cross_view_feature_similarity_generated": 0.6284677554355111,
+      "cross_view_feature_similarity_generated_median": 0.6317250728607178,
+      "cross_view_feature_similarity_generated_std": 0.05609236571124408,
+      "cross_view_feature_similarity_generated_min": 0.4594019651412964,
+      "cross_view_feature_similarity_generated_max": 0.7458941340446472,
+      "cross_view_feature_similarity_generated_valid_count": 172,
+      "cross_view_feature_similarity_generated_invalid_count": 0,
+      "cross_view_feature_similarity_generated_status": "available",
+      "cross_view_feature_similarity_difference": -0.009220211311828258,
+      "cross_view_feature_similarity_difference_median": -0.008662283420562744,
+      "cross_view_feature_similarity_difference_std": 0.044941006238699066,
+      "cross_view_feature_similarity_difference_min": -0.10693180561065674,
+      "cross_view_feature_similarity_difference_max": 0.10777068138122559,
+      "cross_view_feature_similarity_difference_valid_count": 172,
+      "cross_view_feature_similarity_difference_invalid_count": 0,
+      "cross_view_feature_similarity_difference_status": "available",
+      "cross_view_feature_consistency_error": 0.036891281258228215,
+      "cross_view_feature_consistency_error_median": 0.031201422214508057,
+      "cross_view_feature_consistency_error_std": 0.027271591547026623,
+      "cross_view_feature_consistency_error_min": 0.0004431009292602539,
+      "cross_view_feature_consistency_error_max": 0.10777068138122559,
+      "cross_view_feature_consistency_error_valid_count": 172,
+      "cross_view_feature_consistency_error_invalid_count": 0,
+      "cross_view_feature_consistency_error_status": "available"
+    },
+    {
+      "camera_index": null,
+      "camera_pair": "0-2",
+      "camera_a": 0,
+      "camera_b": 2,
+      "source_frame_count": 172,
+      "trajectory_count": 4,
+      "cross_view_object_agreement_reference": 0.005341880341880341,
+      "cross_view_object_agreement_reference_median": 0.0,
+      "cross_view_object_agreement_reference_std": 0.04781505128333387,
+      "cross_view_object_agreement_reference_min": 0.0,
+      "cross_view_object_agreement_reference_max": 0.5,
+      "cross_view_object_agreement_reference_valid_count": 156,
+      "cross_view_object_agreement_reference_invalid_count": 16,
+      "cross_view_object_agreement_reference_status": "partially_available",
+      "cross_view_object_agreement_generated": 0.011185682326621923,
+      "cross_view_object_agreement_generated_median": 0.0,
+      "cross_view_object_agreement_generated_std": 0.08987610481700523,
+      "cross_view_object_agreement_generated_min": 0.0,
+      "cross_view_object_agreement_generated_max": 1.0,
+      "cross_view_object_agreement_generated_valid_count": 149,
+      "cross_view_object_agreement_generated_invalid_count": 23,
+      "cross_view_object_agreement_generated_status": "partially_available",
+      "cross_view_object_agreement_difference": 0.008045977011494251,
+      "cross_view_object_agreement_difference_median": 0.0,
+      "cross_view_object_agreement_difference_std": 0.10044161965495853,
+      "cross_view_object_agreement_difference_min": -0.5,
+      "cross_view_object_agreement_difference_max": 1.0,
+      "cross_view_object_agreement_difference_valid_count": 145,
+      "cross_view_object_agreement_difference_invalid_count": 27,
+      "cross_view_object_agreement_difference_status": "partially_available",
+      "cross_view_feature_similarity_reference": 0.41135326019206714,
+      "cross_view_feature_similarity_reference_median": 0.4009935259819031,
+      "cross_view_feature_similarity_reference_std": 0.08197150138884461,
+      "cross_view_feature_similarity_reference_min": 0.24000288546085358,
+      "cross_view_feature_similarity_reference_max": 0.5799493193626404,
+      "cross_view_feature_similarity_reference_valid_count": 172,
+      "cross_view_feature_similarity_reference_invalid_count": 0,
+      "cross_view_feature_similarity_reference_status": "available",
+      "cross_view_feature_similarity_generated": 0.4068740656556085,
+      "cross_view_feature_similarity_generated_median": 0.40200525522232056,
+      "cross_view_feature_similarity_generated_std": 0.09525894673113901,
+      "cross_view_feature_similarity_generated_min": 0.15941326320171356,
+      "cross_view_feature_similarity_generated_max": 0.6122424006462097,
+      "cross_view_feature_similarity_generated_valid_count": 172,
+      "cross_view_feature_similarity_generated_invalid_count": 0,
+      "cross_view_feature_similarity_generated_status": "available",
+      "cross_view_feature_similarity_difference": -0.004479194536458614,
+      "cross_view_feature_similarity_difference_median": -0.006317108869552612,
+      "cross_view_feature_similarity_difference_std": 0.05080825857362452,
+      "cross_view_feature_similarity_difference_min": -0.18840450048446655,
+      "cross_view_feature_similarity_difference_max": 0.18438208103179932,
+      "cross_view_feature_similarity_difference_valid_count": 172,
+      "cross_view_feature_similarity_difference_invalid_count": 0,
+      "cross_view_feature_similarity_difference_status": "available",
+      "cross_view_feature_consistency_error": 0.037037988648165106,
+      "cross_view_feature_consistency_error_median": 0.0282069593667984,
+      "cross_view_feature_consistency_error_std": 0.0350675023330451,
+      "cross_view_feature_consistency_error_min": 9.807944297790527e-05,
+      "cross_view_feature_consistency_error_max": 0.18840450048446655,
+      "cross_view_feature_consistency_error_valid_count": 172,
+      "cross_view_feature_consistency_error_invalid_count": 0,
+      "cross_view_feature_consistency_error_status": "available"
+    },
+    {
+      "camera_index": null,
+      "camera_pair": "1-2",
+      "camera_a": 1,
+      "camera_b": 2,
+      "source_frame_count": 172,
+      "trajectory_count": 4,
+      "cross_view_object_agreement_reference": 0.0481859410430839,
+      "cross_view_object_agreement_reference_median": 0.0,
+      "cross_view_object_agreement_reference_std": 0.19487121211466332,
+      "cross_view_object_agreement_reference_min": 0.0,
+      "cross_view_object_agreement_reference_max": 1.0,
+      "cross_view_object_agreement_reference_valid_count": 147,
+      "cross_view_object_agreement_reference_invalid_count": 25,
+      "cross_view_object_agreement_reference_status": "partially_available",
+      "cross_view_object_agreement_generated": 0.023809523809523808,
+      "cross_view_object_agreement_generated_median": 0.0,
+      "cross_view_object_agreement_generated_std": 0.13041013273932528,
+      "cross_view_object_agreement_generated_min": 0.0,
+      "cross_view_object_agreement_generated_max": 1.0,
+      "cross_view_object_agreement_generated_valid_count": 147,
+      "cross_view_object_agreement_generated_invalid_count": 25,
+      "cross_view_object_agreement_generated_status": "partially_available",
+      "cross_view_object_agreement_difference": -0.015782828282828287,
+      "cross_view_object_agreement_difference_median": 0.0,
+      "cross_view_object_agreement_difference_std": 0.23393963790526523,
+      "cross_view_object_agreement_difference_min": -1.0,
+      "cross_view_object_agreement_difference_max": 1.0,
+      "cross_view_object_agreement_difference_valid_count": 132,
+      "cross_view_object_agreement_difference_invalid_count": 40,
+      "cross_view_object_agreement_difference_status": "partially_available",
+      "cross_view_feature_similarity_reference": 0.40640093663404153,
+      "cross_view_feature_similarity_reference_median": 0.41067667305469513,
+      "cross_view_feature_similarity_reference_std": 0.08259764119277606,
+      "cross_view_feature_similarity_reference_min": 0.20001545548439026,
+      "cross_view_feature_similarity_reference_max": 0.5828019380569458,
+      "cross_view_feature_similarity_reference_valid_count": 172,
+      "cross_view_feature_similarity_reference_invalid_count": 0,
+      "cross_view_feature_similarity_reference_status": "available",
+      "cross_view_feature_similarity_generated": 0.4109497150882732,
+      "cross_view_feature_similarity_generated_median": 0.42301860451698303,
+      "cross_view_feature_similarity_generated_std": 0.08761141719211375,
+      "cross_view_feature_similarity_generated_min": 0.18031935393810272,
+      "cross_view_feature_similarity_generated_max": 0.5871909856796265,
+      "cross_view_feature_similarity_generated_valid_count": 172,
+      "cross_view_feature_similarity_generated_invalid_count": 0,
+      "cross_view_feature_similarity_generated_status": "available",
+      "cross_view_feature_similarity_difference": 0.004548778454231662,
+      "cross_view_feature_similarity_difference_median": 0.0036017298698425293,
+      "cross_view_feature_similarity_difference_std": 0.0466853134153123,
+      "cross_view_feature_similarity_difference_min": -0.12242785096168518,
+      "cross_view_feature_similarity_difference_max": 0.17210108041763306,
+      "cross_view_feature_similarity_difference_valid_count": 172,
+      "cross_view_feature_similarity_difference_invalid_count": 0,
+      "cross_view_feature_similarity_difference_status": "available",
+      "cross_view_feature_consistency_error": 0.0350896444951379,
+      "cross_view_feature_consistency_error_median": 0.026593148708343506,
+      "cross_view_feature_consistency_error_std": 0.031127587817183316,
+      "cross_view_feature_consistency_error_min": 0.00015789270401000977,
+      "cross_view_feature_consistency_error_max": 0.17210108041763306,
+      "cross_view_feature_consistency_error_valid_count": 172,
+      "cross_view_feature_consistency_error_invalid_count": 0,
+      "cross_view_feature_consistency_error_status": "available"
+    }
+  ],
+  "horizon_wise_results": [
+    {
+      "horizon": 0,
+      "mse": 483.9944296754436,
+      "mse_median": 304.3841878255208,
+      "mse_std": 482.31856998269717,
+      "mse_min": 1.7438530815972222,
+      "mse_max": 2471.843359375,
+      "mse_valid_count": 144,
+      "mse_invalid_count": 0,
+      "psnr": 23.92992691105731,
+      "psnr_median": 23.296597737126397,
+      "psnr_std": 5.877311291275285,
+      "psnr_min": 14.200594148048962,
+      "psnr_max": 45.71570467736579,
+      "psnr_valid_count": 144,
+      "psnr_invalid_count": 0,
+      "ssim": 0.8473903581686693,
+      "ssim_median": 0.8807397837392845,
+      "ssim_std": 0.11823103786358824,
+      "ssim_min": 0.43531938272943416,
+      "ssim_max": 0.994110541408633,
+      "ssim_valid_count": 144,
+      "ssim_invalid_count": 0,
+      "lpips": 0.09562523533612774,
+      "lpips_median": 0.04835930094122887,
+      "lpips_std": 0.10099480445684443,
+      "lpips_min": 0.0018225492676720023,
+      "lpips_max": 0.4375952482223511,
+      "lpips_valid_count": 144,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": null,
+      "temporal_difference_error_median": null,
+      "temporal_difference_error_std": null,
+      "temporal_difference_error_min": null,
+      "temporal_difference_error_max": null,
+      "temporal_difference_error_valid_count": 0,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": null,
+      "optical_flow_difference_median": null,
+      "optical_flow_difference_std": null,
+      "optical_flow_difference_min": null,
+      "optical_flow_difference_max": null,
+      "optical_flow_difference_valid_count": 0,
+      "optical_flow_difference_invalid_count": 0
+    },
+    {
+      "horizon": 1,
+      "mse": 504.5095827832635,
+      "mse_median": 294.20628255208334,
+      "mse_std": 508.3416404420119,
+      "mse_min": 4.893321397569444,
+      "mse_max": 2536.5977593315974,
+      "mse_valid_count": 144,
+      "mse_invalid_count": 0,
+      "psnr": 23.540099221100224,
+      "psnr_median": 23.444303234466748,
+      "psnr_std": 5.274375997025508,
+      "psnr_min": 14.088287563788349,
+      "psnr_max": 41.23476619335052,
+      "psnr_valid_count": 144,
+      "psnr_invalid_count": 0,
+      "ssim": 0.844951724713316,
+      "ssim_median": 0.8820313602417953,
+      "ssim_std": 0.11755397941476764,
+      "ssim_min": 0.4715519023880608,
+      "ssim_max": 0.9866958612142162,
+      "ssim_valid_count": 144,
+      "ssim_invalid_count": 0,
+      "lpips": 0.09759990583794813,
+      "lpips_median": 0.049743834882974625,
+      "lpips_std": 0.10209875313598536,
+      "lpips_min": 0.007310550659894943,
+      "lpips_max": 0.4108225107192993,
+      "lpips_valid_count": 144,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 6.3848208172453775,
+      "temporal_difference_error_median": 4.821451663970947,
+      "temporal_difference_error_std": 5.392092593389001,
+      "temporal_difference_error_min": 1.0769368410110474,
+      "temporal_difference_error_max": 27.52150535583496,
+      "temporal_difference_error_valid_count": 144,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 0.8995560244589673,
+      "optical_flow_difference_median": 0.2865771387244329,
+      "optical_flow_difference_std": 1.4863979573894224,
+      "optical_flow_difference_min": 0.04647510744737539,
+      "optical_flow_difference_max": 9.84502900129995,
+      "optical_flow_difference_valid_count": 144,
+      "optical_flow_difference_invalid_count": 0
+    },
+    {
+      "horizon": 2,
+      "mse": 520.5486617476852,
+      "mse_median": 332.1462320963542,
+      "mse_std": 512.3182533042643,
+      "mse_min": 5.940711805555556,
+      "mse_max": 2587.4382161458334,
+      "mse_valid_count": 144,
+      "mse_invalid_count": 0,
+      "psnr": 23.053260575479023,
+      "psnr_median": 22.918656551798808,
+      "psnr_std": 4.665204114599877,
+      "psnr_min": 14.002103725313573,
+      "psnr_max": 40.39241876374203,
+      "psnr_valid_count": 144,
+      "psnr_invalid_count": 0,
+      "ssim": 0.837687646269008,
+      "ssim_median": 0.8760695799196805,
+      "ssim_std": 0.1192058538412407,
+      "ssim_min": 0.42838981193247455,
+      "ssim_max": 0.9854305035631402,
+      "ssim_valid_count": 144,
+      "ssim_invalid_count": 0,
+      "lpips": 0.10035797826842302,
+      "lpips_median": 0.04990008845925331,
+      "lpips_std": 0.1019950918138805,
+      "lpips_min": 0.009941410273313522,
+      "lpips_max": 0.4334087669849396,
+      "lpips_valid_count": 144,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 7.189568006743987,
+      "temporal_difference_error_median": 5.750705242156982,
+      "temporal_difference_error_std": 5.842333924053323,
+      "temporal_difference_error_min": 0.8752170205116272,
+      "temporal_difference_error_max": 27.477415084838867,
+      "temporal_difference_error_valid_count": 144,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 1.0139807563220937,
+      "optical_flow_difference_median": 0.33900476591728684,
+      "optical_flow_difference_std": 1.5766652628956983,
+      "optical_flow_difference_min": 0.03832408920389444,
+      "optical_flow_difference_max": 7.258515034010679,
+      "optical_flow_difference_valid_count": 144,
+      "optical_flow_difference_invalid_count": 0
+    },
+    {
+      "horizon": 3,
+      "mse": 527.2436510250892,
+      "mse_median": 311.6834445529514,
+      "mse_std": 509.0066492182156,
+      "mse_min": 7.2494520399305555,
+      "mse_max": 2766.6175618489583,
+      "mse_valid_count": 144,
+      "mse_invalid_count": 0,
+      "psnr": 22.89528257623095,
+      "psnr_median": 23.19377679054753,
+      "psnr_std": 4.509532351040883,
+      "psnr_min": 13.711312314550971,
+      "psnr_max": 39.52775179818036,
+      "psnr_valid_count": 144,
+      "psnr_invalid_count": 0,
+      "ssim": 0.8358737720280757,
+      "ssim_median": 0.875367535850907,
+      "ssim_std": 0.11858323648910393,
+      "ssim_min": 0.4253520218491109,
+      "ssim_max": 0.984771581039546,
+      "ssim_valid_count": 144,
+      "ssim_invalid_count": 0,
+      "lpips": 0.10379136802576897,
+      "lpips_median": 0.050425464287400246,
+      "lpips_std": 0.10393018626455813,
+      "lpips_min": 0.01097031682729721,
+      "lpips_max": 0.43383798003196716,
+      "lpips_valid_count": 144,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 6.563213531341818,
+      "temporal_difference_error_median": 4.614943981170654,
+      "temporal_difference_error_std": 6.0662361301521095,
+      "temporal_difference_error_min": 0.8517035841941833,
+      "temporal_difference_error_max": 28.501888275146484,
+      "temporal_difference_error_valid_count": 144,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 1.0036035997990442,
+      "optical_flow_difference_median": 0.2840305847691815,
+      "optical_flow_difference_std": 1.5913412268749894,
+      "optical_flow_difference_min": 0.03580307056665812,
+      "optical_flow_difference_max": 7.426929419039243,
+      "optical_flow_difference_valid_count": 144,
+      "optical_flow_difference_invalid_count": 0
+    },
+    {
+      "horizon": 4,
+      "mse": 549.316342351466,
+      "mse_median": 336.082896592882,
+      "mse_std": 520.1107265251104,
+      "mse_min": 8.44573025173611,
+      "mse_max": 2784.316916232639,
+      "mse_valid_count": 144,
+      "mse_invalid_count": 0,
+      "psnr": 22.604103227536143,
+      "psnr_median": 22.866342575096024,
+      "psnr_std": 4.389008472370171,
+      "psnr_min": 13.68361694894247,
+      "psnr_max": 38.86443154493362,
+      "psnr_valid_count": 144,
+      "psnr_invalid_count": 0,
+      "ssim": 0.8330099167169259,
+      "ssim_median": 0.8736313884889237,
+      "ssim_std": 0.1171055500453415,
+      "ssim_min": 0.4397194494683456,
+      "ssim_max": 0.984234805067861,
+      "ssim_valid_count": 144,
+      "ssim_invalid_count": 0,
+      "lpips": 0.10663050503676964,
+      "lpips_median": 0.05212252400815487,
+      "lpips_std": 0.10322656573917433,
+      "lpips_min": 0.011348230764269829,
+      "lpips_max": 0.4366391599178314,
+      "lpips_valid_count": 144,
+      "lpips_invalid_count": 0,
+      "temporal_difference_error": 7.181028589192364,
+      "temporal_difference_error_median": 5.2000298500061035,
+      "temporal_difference_error_std": 5.976330786074333,
+      "temporal_difference_error_min": 0.8206977248191833,
+      "temporal_difference_error_max": 29.75914764404297,
+      "temporal_difference_error_valid_count": 144,
+      "temporal_difference_error_invalid_count": 0,
+      "optical_flow_difference": 1.0378559469932134,
+      "optical_flow_difference_median": 0.33215500169129164,
+      "optical_flow_difference_std": 1.6081424598196146,
+      "optical_flow_difference_min": 0.04370596369676722,
+      "optical_flow_difference_max": 7.798122395300241,
+      "optical_flow_difference_valid_count": 144,
+      "optical_flow_difference_invalid_count": 0
+    }
+  ],
+  "fid": {
+    "metric": "fid",
+    "status": "available",
+    "value": 51.15535395693405,
+    "reason": null,
+    "mode": "dataset_frame_distribution",
+    "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+    "weights_path": "/home/mpcl/.cache/torch/hub/checkpoints/weights-inception-2015-12-05-6726825d.pth",
+    "real_frame_count": 720,
+    "generated_frame_count": 720,
+    "batch_size": 128
+  },
+  "fvd": {
+    "metric": "fvd",
+    "status": "unavailable",
+    "value": null,
+    "reason": "FVD requires at least two clips per distribution; only 0 eligible clips were reconstructed",
+    "mode": "video_i3d",
+    "feature_extractor": "cd-fvd I3D-400",
+    "weights_path": "eval/weights/i3d_pretrained_400.pt",
+    "frame_stride": 1,
+    "real_clip_count": 0,
+    "generated_clip_count": 0,
+    "clip_length": 64,
+    "clip_stride": 64,
+    "max_clips_per_trajectory_camera": 128,
+    "clip_count": 0,
+    "metadata_read_failures": 0,
+    "sample_load_failures": 0,
+    "samples_without_source_indices": 0,
+    "negative_source_indices_skipped": 0,
+    "duplicate_frame_indices_dropped": 204,
+    "segments_too_short": 12
+  },
+  "distribution_metrics": {
+    "fid": {
+      "metric": "fid",
+      "status": "available",
+      "value": 51.15535395693405,
+      "reason": null,
+      "mode": "dataset_frame_distribution",
+      "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+      "weights_path": "/home/mpcl/.cache/torch/hub/checkpoints/weights-inception-2015-12-05-6726825d.pth",
+      "real_frame_count": 720,
+      "generated_frame_count": 720,
+      "batch_size": 128
+    },
+    "fvd": {
+      "metric": "fvd",
+      "status": "unavailable",
+      "value": null,
+      "reason": "FVD requires at least two clips per distribution; only 0 eligible clips were reconstructed",
+      "mode": "video_i3d",
+      "feature_extractor": "cd-fvd I3D-400",
+      "weights_path": "eval/weights/i3d_pretrained_400.pt",
+      "frame_stride": 1,
+      "real_clip_count": 0,
+      "generated_clip_count": 0,
+      "clip_length": 64,
+      "clip_stride": 64,
+      "max_clips_per_trajectory_camera": 128,
+      "clip_count": 0,
+      "metadata_read_failures": 0,
+      "sample_load_failures": 0,
+      "samples_without_source_indices": 0,
+      "negative_source_indices_skipped": 0,
+      "duplicate_frame_indices_dropped": 204,
+      "segments_too_short": 12
+    }
+  },
+  "metric_configuration": {
+    "pixel_preprocessing": "channel-last RGB; uint8 intensity [0,255]; no resizing",
+    "ssim": "scikit-image; channel_axis=-1; data_range=255; adaptive odd window up to 7",
+    "optical_flow": "OpenCV Farneback; estimated-field difference, not ground-truth endpoint error",
+    "object_metrics": "Detector plugin outputs xyxy boxes; greedy IoU tracker; custom image-space metrics",
+    "action_states": "annotation states are 7D; first 3 dimensions used for translation step",
+    "gripper_transition_agreement": {
+      "raw_to_video_alignment": "raw_index = 3 * source_frame_index",
+      "gripper_transition_threshold_native_units": 0.1
+    },
+    "cross_view_object_agreement": "pairwise category-set Jaccard; synchronized source frames; both-empty pairs excluded",
+    "cross_view_feature_consistency": {
+      "extractor": "Torchvision ResNet-50 IMAGENET1K_V2",
+      "preprocessing": "associated weights.transforms()",
+      "batch_size": 128,
+      "metric": "mean pairwise cosine similarity across synchronized views"
+    },
+    "fvd": {
+      "mode": "video_i3d",
+      "clip_length": 64,
+      "clip_stride": 64,
+      "max_clips_per_trajectory_camera": 128,
+      "frame_alignment": "exact frame_indices or contiguous start_frame_index fallback; first sorted trajectory chunk wins overlaps; duplicate indices removed; gaps split clips"
+    },
+    "fid": {
+      "feature_extractor": "TorchMetrics Inception-v3, 2048 features",
+      "preprocessing": "uint8 RGB; 299x299 resize; antialias=False",
+      "batch_size": 128,
+      "weights": "explicit local file or existing Torch-Fidelity cache; no downloads"
+    }
+  },
+  "detector_configuration": {
+    "detector": "eval.scripts.droid_detector:factory",
+    "tracker": "iou",
+    "status": "available",
+    "reason": null,
+    "tracking_reason": null
+  },
+  "preprocessing": {
+    "canonical_layout": "camera,time,height,width,channel",
+    "color": "RGB",
+    "pixel_range": "[0,255]",
+    "resizing": "none",
+    "frame_stride": 1,
+    "action_alignment": "explicit frame_indices; safe contiguous fallback from start_frame_index",
+    "raw_action_alignment": "raw_index = 3 * source_frame_index"
+  },
+  "warnings": [
+    "Pixel fidelity is not evidence of physical understanding.",
+    "Image-space overlap and flow metrics are not verified 3D physical measurements.",
+    "Action-motion correlation is descriptive and is not causal evidence.",
+    "Gripper transition agreement is synchronized-series descriptive only, not causal evidence.",
+    "Cross-view category agreement is limited by detector labels and per-view visibility; it is not object identity or 3D agreement.",
+    "ResNet-50 cross-view feature similarity is a semantic proxy, not geometric correspondence."
+  ],
+  "validation_report": [
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_000_start_0.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 0,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_001_start_4.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 1,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_002_start_8.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 2,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_003_start_12.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 3,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_004_start_16.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 4,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_005_start_20.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 5,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_006_start_24.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 6,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_007_start_28.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 7,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_008_start_32.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 8,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_009_start_36.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 9,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_010_start_40.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 10,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": false,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_1799/interaction_011_start_44.npz",
+      "trajectory_id": "1799",
+      "interaction_index": 11,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": false,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/1799.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_000_start_0.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 0,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_001_start_4.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 1,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_002_start_8.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 2,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_003_start_12.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 3,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_004_start_16.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 4,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_005_start_20.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 5,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_006_start_24.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 6,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_007_start_28.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 7,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_008_start_32.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 8,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_009_start_36.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 9,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_010_start_40.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 10,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_18599/interaction_011_start_44.npz",
+      "trajectory_id": "18599",
+      "interaction_index": 11,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/18599.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_000_start_0.npz",
+      "trajectory_id": "199",
+      "interaction_index": 0,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_001_start_4.npz",
+      "trajectory_id": "199",
+      "interaction_index": 1,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_002_start_8.npz",
+      "trajectory_id": "199",
+      "interaction_index": 2,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_003_start_12.npz",
+      "trajectory_id": "199",
+      "interaction_index": 3,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_004_start_16.npz",
+      "trajectory_id": "199",
+      "interaction_index": 4,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_005_start_20.npz",
+      "trajectory_id": "199",
+      "interaction_index": 5,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_006_start_24.npz",
+      "trajectory_id": "199",
+      "interaction_index": 6,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_007_start_28.npz",
+      "trajectory_id": "199",
+      "interaction_index": 7,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_008_start_32.npz",
+      "trajectory_id": "199",
+      "interaction_index": 8,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": false,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_009_start_36.npz",
+      "trajectory_id": "199",
+      "interaction_index": 9,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": false,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_010_start_40.npz",
+      "trajectory_id": "199",
+      "interaction_index": 10,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": false,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_199/interaction_011_start_44.npz",
+      "trajectory_id": "199",
+      "interaction_index": 11,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": false,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/199.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_000_start_0.npz",
+      "trajectory_id": "899",
+      "interaction_index": 0,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_001_start_4.npz",
+      "trajectory_id": "899",
+      "interaction_index": 1,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_002_start_8.npz",
+      "trajectory_id": "899",
+      "interaction_index": 2,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_003_start_12.npz",
+      "trajectory_id": "899",
+      "interaction_index": 3,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_004_start_16.npz",
+      "trajectory_id": "899",
+      "interaction_index": 4,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_005_start_20.npz",
+      "trajectory_id": "899",
+      "interaction_index": 5,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_006_start_24.npz",
+      "trajectory_id": "899",
+      "interaction_index": 6,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_007_start_28.npz",
+      "trajectory_id": "899",
+      "interaction_index": 7,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_008_start_32.npz",
+      "trajectory_id": "899",
+      "interaction_index": 8,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_009_start_36.npz",
+      "trajectory_id": "899",
+      "interaction_index": 9,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_010_start_40.npz",
+      "trajectory_id": "899",
+      "interaction_index": 10,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    },
+    {
+      "sample": "synthetic_traj/Rollouts_replay_droid_subset/evaluation_data/trajectory_899/interaction_011_start_44.npz",
+      "trajectory_id": "899",
+      "interaction_index": 11,
+      "status": "valid",
+      "checks": {
+        "required_fields": {
+          "status": "valid",
+          "fields": [
+            "ground_truth",
+            "prediction"
+          ]
+        },
+        "shape": {
+          "status": "valid",
+          "ground_truth": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "prediction": [
+            3,
+            5,
+            192,
+            320,
+            3
+          ],
+          "layout": "camera,time,height,width,channel"
+        },
+        "camera_count": {
+          "status": "valid",
+          "count": 3
+        },
+        "frame_count": {
+          "status": "valid",
+          "count": 5
+        },
+        "image": {
+          "status": "valid",
+          "height": 192,
+          "width": 320,
+          "channels": 3,
+          "dtype": "uint8",
+          "finite": true
+        },
+        "frame_indices": {
+          "status": "available",
+          "count": 5,
+          "valid_integer_values": true,
+          "strictly_increasing": true,
+          "nonnegative": true
+        },
+        "fps": {
+          "status": "available",
+          "value": 7.0
+        },
+        "annotation": {
+          "status": "available",
+          "reason": null,
+          "path": "dataset_example/droid_subset/annotation/val/899.json",
+          "aligned_frame_count": 5,
+          "state_shape": [
+            5,
+            7
+          ],
+          "joint_shape": [
+            5,
+            8
+          ],
+          "joint_status": "available",
+          "joint_reason": null
+        }
+      }
+    }
+  ],
+  "invalid_sample_count": 0,
+  "written_csv_files": [
+    "metrics_per_frame.csv",
+    "metrics_per_interaction.csv",
+    "metrics_per_trajectory.csv",
+    "metrics_per_camera.csv",
+    "metrics_per_horizon.csv",
+    "metrics_per_object.csv",
+    "object_tracks.csv",
+    "physical_violations.csv"
+  ]
+}
