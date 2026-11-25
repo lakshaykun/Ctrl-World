@@ -15,6 +15,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.pipeline_ctrl_world import CtrlWorldDiffusionPipeline
 from models.ctrl_world import CrtlWorld
+from models.dynamic_memory import select_dynamic_memories
 
 
 def _decode_one_camera(video_path, length, frames_ids):
@@ -284,6 +285,12 @@ if __name__ == "__main__":
         help="Skip final MP4 video reconstruction and saving",
     )
 
+    parser.add_argument(
+        "--dynamic_memory",
+        action="store_true",
+        help="Use rule-based dynamic memory selection instead of fixed history indices",
+    )
+
     args_new = parser.parse_args()
 
     args = wm_args(
@@ -420,10 +427,35 @@ if __name__ == "__main__":
             print("################ world model forward ################")
             print(f"traj_id:{val_id_i}, interact step: {i}/{interact_num}")
 
-            history_idx = [0, 0, -8, -6, -4, -2]
-            his_pose = np.concatenate([his_eef[idx] for idx in history_idx], axis=0)
-            action_cond = np.concatenate([his_pose, cartesian_pose], axis=0)
-            his_cond_input = torch.cat([his_cond[idx] for idx in history_idx], dim=0).unsqueeze(0)
+            if args.dynamic_memory:
+                his_cond_input, his_pose, selected_memory_indices = select_dynamic_memories(
+                    history_latents=his_cond,
+                    history_poses=his_eef,
+                    current_pose=state_first,
+                    future_actions=cartesian_pose,
+                    num_memories=num_history,
+                )
+
+                print("Dynamic memory indices:", selected_memory_indices.tolist())
+
+            else:
+                # Original Ctrl-World fixed-memory baseline
+                history_idx = [0, 0, -8, -6, -4, -2]
+
+                his_pose = np.concatenate(
+                    [his_eef[idx] for idx in history_idx],
+                    axis=0,
+                )
+
+                his_cond_input = torch.cat(
+                    [his_cond[idx] for idx in history_idx],
+                    dim=0,
+                ).unsqueeze(0)
+
+            action_cond = np.concatenate(
+                [his_pose, cartesian_pose],
+                axis=0,
+            )
             current_latent = his_cond[-1]
             assert current_latent.shape == (1, 4, 72, 40)
             assert action_cond.shape == (int(num_history + num_frames), 7)
