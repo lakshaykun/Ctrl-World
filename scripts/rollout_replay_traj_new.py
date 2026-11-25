@@ -16,6 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models.pipeline_ctrl_world import CtrlWorldDiffusionPipeline
 from models.ctrl_world import CrtlWorld
 from models.dynamic_memory import select_dynamic_memories
+from models.dynamic_memory_v2 import select_dynamic_memories_v2
 
 
 def _decode_one_camera(video_path, length, frames_ids):
@@ -286,16 +287,22 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--output_dir",
+        type=str,
+        default=None,
+        help="Custom directory to save evaluation outputs, resume checkpoints, and videos",
+    )
+
+    parser.add_argument(
         "--dynamic_memory",
         action="store_true",
         help="Use rule-based dynamic memory selection instead of fixed history indices",
     )
 
     parser.add_argument(
-        "--output_dir",
-        type=str,
-        default=None,
-        help="Custom directory to save evaluation outputs, resume checkpoints, and videos",
+        "--dynamic_memory_v2",
+        action="store_true",
+        help="Use V2 action-first memory selection with controlled temporal diversity",
     )
 
     args_new = parser.parse_args()
@@ -438,7 +445,18 @@ if __name__ == "__main__":
             print("################ world model forward ################")
             print(f"traj_id:{val_id_i}, interact step: {i}/{interact_num}")
 
-            if args.dynamic_memory:
+            if args.dynamic_memory_v2:
+                his_cond_input, his_pose, selected_memory_indices = select_dynamic_memories_v2(
+                    history_latents=his_cond,
+                    history_poses=his_eef,
+                    current_pose=state_first,
+                    future_actions=cartesian_pose,
+                    num_memories=num_history,
+                )
+
+                print("Dynamic memory V2 indices:", selected_memory_indices.tolist())
+
+            elif args.dynamic_memory:
                 his_cond_input, his_pose, selected_memory_indices = select_dynamic_memories(
                     history_latents=his_cond,
                     history_poses=his_eef,

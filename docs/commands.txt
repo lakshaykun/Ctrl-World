@@ -18,21 +18,12 @@ CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj_new.py \
   --dataset_names droid_subset \
   --dataset_root_path dataset_example \
   --dataset_meta_info_path dataset_meta_info \
+  --output_dir synthetic_traj/Rollouts_replay_droid_subset_dynamic_memory_1\
   --svd_model_path checkpoints/svd \
   --clip_model_path checkpoints/clip \
   --ckpt_path checkpoints/ctrl-world/checkpoint-10000.pt \
   --dynamic_memory \
   --skip_video
-
-CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_video_metrics.py \
-  --data_dir synthetic_traj/Rollouts_replay_droid/evaluation_data \
-  --output_root evaluation_results \
-  --metrics psnr ssim lpips fid fvd \
-  --device cuda \
-  --lpips_batch_size 32 \
-  --fid_batch_size 64 \
-  --ssim_workers 4 \
-  --profile
 
 
 accelerate launch dataset_example/extract_latent.py \
@@ -53,27 +44,6 @@ git reset --hard origin/main
 pgrep -af 'rollout_replay_traj_new.py'
 kill -CONT 811193
 kill -TERM 811193
-
-
-
-python -m eval.scripts.run_evaluation \
-  --input_dir synthetic_traj/Rollouts_replay_droid_subset/evaluation_data \
-  --annotation_root dataset_example/droid_subset \
-  --output_dir eval/results \
-  --metrics all \
-  --device cuda:0 \
-  --save_visualizations \
-  --save_comparison_videos
-
-
-python -m eval.scripts.run_evaluation \
-  --input_dir synthetic_traj/Rollouts_replay_droid_subset/evaluation_data \
-  --output_dir eval/results/droid_subset \
-  --metrics lpips \
-  --device cuda:0 \
-  --batch_size 16 \
-  --lpips_network alex \
-  --lpips_weights /home/mpcl/.conda/envs/ctrl-world/lib/python3.11/site-packages/lpips/weights/v0.1/alex.pth
 
 
 
@@ -103,6 +73,8 @@ url = "https://download.pytorch.org/models/alexnet-owt-7be5be79.pth"
 path = torch.hub.load_state_dict_from_url(url, progress=True)
 print("AlexNet backbone downloaded:", path)
 PY
+
+
 
 
 python -m eval.scripts.run_evaluation \
@@ -136,9 +108,9 @@ CUDA_VISIBLE_DEVICES=0 python -m eval.scripts.run_evaluation \
   --lpips_weights /home/mpcl/.conda/envs/ctrl-world/lib/python3.11/site-packages/lpips/weights/v0.1/alex.pth
 
 CUDA_VISIBLE_DEVICES=0 python -m eval.scripts.run_evaluation \
-  --input_dir synthetic_traj/Rollouts_replay_droid_subset/evaluation_data \
+  --input_dir synthetic_traj/Rollouts_replay_droid_subset_dynamic_memory_1/Rollouts_replay_droid_subset/evaluation_data \
   --annotation_root dataset_example/droid_subset \
-  --output_dir eval/results/droid_subset \
+  --output_dir eval/results/droid_subset_dynamic_memory_1 \
   --metrics all \
   --device cuda:0 \
   --cvfc_batch_size 256 \
