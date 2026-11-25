@@ -18,7 +18,18 @@ from .aggregation import (
     aggregate_unique_source_frame_metrics,
     dataset_summary,
 )
-from .annotation_loader import load_annotation
+from .annotation_loader import _resolve_annotation, load_annotation
+from .checkpointing import (
+    CHECKPOINT_SCHEMA_VERSION,
+    SAMPLE_RESULT_LISTS,
+    build_sample_cache_identity,
+    file_fingerprint,
+    load_sample_checkpoint,
+    read_run_metadata,
+    stable_identity,
+    write_run_metadata,
+    write_sample_checkpoint,
+)
 from .data_loader import discover_npz_files, iter_samples
 from .metrics.action_consistency import (
     RECORDED_ACTION_METRICS,
@@ -87,6 +98,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input_dir", required=True, help="Root containing evaluation NPZ files")
     parser.add_argument("--output_dir", default="eval/results")
+    parser.add_argument("--resume-run", default=None, help="Resume into an existing run directory")
+    parser.add_argument(
+        "--checkpoint-every",
+        type=int,
+        default=1,
+        help="Persist completed sample results every N newly evaluated samples",
+    )
+    parser.add_argument("--force", action="store_true", help="Ignore existing sample checkpoints")
     parser.add_argument("--annotation_root", default=None, help="Dataset root containing annotation/val")
     parser.add_argument(
         "--metrics",
@@ -146,6 +165,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error("--max_fvd_clips_per_trajectory must be positive")
     if args.frame_stride < 1:
         parser.error("--frame_stride must be positive")
+    if args.checkpoint_every < 1:
+        parser.error("--checkpoint-every must be positive")
     if args.device != "cpu" and not args.device.startswith("cuda"):
         parser.error("--device must be cpu or a CUDA device such as cuda:0")
     requested = {part.strip().lower() for part in args.metrics.split(",") if part.strip()}
@@ -204,6 +225,204 @@ def _safe_name(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "_", value).strip("_") or "sample"
 
 
+def _sample_trajectory_id(path: Path) -> str | None:
+    try:
+        with np.load(path, allow_pickle=False) as archive:
+            if "trajectory_id" in archive:
+                value = np.asarray(archive["trajectory_id"])
+                if value.size != 1:
+                    return None
+                trajectory_id = value.reshape(()).item()
+                if isinstance(trajectory_id, bytes):
+                    trajectory_id = trajectory_id.decode("utf-8")
+                if str(trajectory_id):
+                    return str(trajectory_id)
+    except (OSError, EOFError, KeyError, TypeError, ValueError, UnicodeDecodeError):
+        return None
+    fallback = path.parent.name.removeprefix("trajectory_")
+    return fallback or None
+
+
+def _annotation_cache_identity(
+    annotation_root: str | None, trajectory_id: str | None
+) -> dict[str, Any] | None:
+    if annotation_root is None:
+        return None
+    root = Path(annotation_root).expanduser().resolve()
+    annotation_path = _resolve_annotation(root, trajectory_id) if trajectory_id else None
+    if annotation_path is None:
+        return {
+            "root": str(root),
+            "path": None,
+            "exists": False,
+            "sha256": None,
+        }
+    fingerprint = file_fingerprint(annotation_path)
+    return {"root": str(root), **fingerprint}
+
+
+def _detector_source_identity(specification: str) -> dict[str, Any] | None:
+    if specification == "none":
+        return None
+    module_name = specification.split(":", 1)[0]
+    module = sys.modules.get(module_name)
+    module_path = getattr(module, "__file__", None)
+    return {
+        "factory": specification,
+        "module": module_name,
+        "module_file": file_fingerprint(module_path) if module_path else None,
+    }
+
+
+def _sample_metric_configuration(
+    args: argparse.Namespace,
+    detector: Detector | None,
+    detector_reason: str | None,
+    tracking_reason: str | None,
+    lpips_model: Any | None,
+    lpips_reason: str | None,
+    cvfc_model: Any | None,
+    cvfc_reason: str | None,
+) -> dict[str, Any]:
+    requested = set(args.requested_metrics)
+    return {
+        "implementation_version": 1,
+        "requested_sample_metrics": sorted(requested - {"fid", "fvd"}),
+        "frame_stride": args.frame_stride,
+        "device": args.device,
+        "lpips": (
+            {
+                "network": args.lpips_network,
+                "weights": file_fingerprint(args.lpips_weights),
+                "batch_size": args.batch_size,
+                "available": lpips_model is not None,
+                "unavailable_reason": lpips_reason,
+            }
+            if "lpips" in requested
+            else None
+        ),
+        "object_and_multiview_detector": (
+            {
+                "source": _detector_source_identity(args.detector),
+                "loaded": detector is not None,
+                "unavailable_reason": detector_reason,
+                "tracker": args.tracker if requested & {"objects", "physical"} else None,
+                "tracking_reason": tracking_reason,
+            }
+            if requested & {"objects", "physical", "multiview"}
+            else None
+        ),
+        "multiview": (
+            {
+                "cvfc_batch_size": args.cvfc_batch_size,
+                "cvfc_available": cvfc_model is not None,
+                "cvfc_unavailable_reason": cvfc_reason,
+            }
+            if "multiview" in requested
+            else None
+        ),
+        "annotations_enabled": args.annotation_root is not None,
+        "save_visualizations": args.save_visualizations,
+        "save_comparison_videos": args.save_comparison_videos,
+    }
+
+
+def _sample_inputs_are_hashable(
+    source_fingerprint: dict[str, Any] | None,
+    annotation_identity: dict[str, Any] | None,
+    sample_configuration: dict[str, Any],
+) -> bool:
+    if (
+        source_fingerprint is None
+        or not source_fingerprint.get("exists")
+        or not source_fingerprint.get("sha256")
+    ):
+        return False
+    fingerprints = [annotation_identity]
+    lpips_config = sample_configuration.get("lpips")
+    if isinstance(lpips_config, dict):
+        fingerprints.append(lpips_config.get("weights"))
+    detector_config = sample_configuration.get("object_and_multiview_detector")
+    if isinstance(detector_config, dict):
+        source = detector_config.get("source")
+        if isinstance(source, dict):
+            module_file = source.get("module_file")
+            if isinstance(module_file, dict):
+                fingerprints.append(module_file)
+    return all(
+        not fingerprint
+        or not fingerprint.get("exists")
+        or bool(fingerprint.get("sha256"))
+        for fingerprint in fingerprints
+    )
+
+
+def _run_configuration(args: argparse.Namespace, files: list[Path]) -> dict[str, Any]:
+    ignored = {"resume_run", "force", "checkpoint_every", "output_dir", "requested_metrics"}
+    configuration = {key: value for key, value in vars(args).items() if key not in ignored}
+    configuration["input_dir"] = str(Path(args.input_dir).expanduser().resolve())
+    configuration["annotation_root"] = (
+        str(Path(args.annotation_root).expanduser().resolve())
+        if args.annotation_root
+        else None
+    )
+    configuration["requested_metrics"] = sorted(args.requested_metrics)
+    configuration["input_paths"] = [str(path.resolve()) for path in files]
+    configuration["global_metric_inputs"] = {
+        "fid": {
+            "weights": file_fingerprint(args.fid_weights),
+            "batch_size": args.fid_batch_size,
+            "device": args.device,
+            "policy": "recomputed from every current sample on each run or resume",
+        },
+        "fvd": {
+            "features": file_fingerprint(args.fvd_features),
+            "weights": file_fingerprint(args.fvd_weights),
+            "extractor_name": args.fvd_extractor_name,
+            "clip_length": args.fvd_clip_len,
+            "clip_stride": args.fvd_stride,
+            "max_clips_per_trajectory_camera": args.max_fvd_clips_per_trajectory,
+            "frame_stride": args.frame_stride,
+            "device": args.device,
+            "policy": "recomputed from the complete current input set on each run or resume",
+        },
+    }
+    return json_safe(configuration)
+
+
+def _empty_sample_results() -> dict[str, Any]:
+    return {**{key: [] for key in SAMPLE_RESULT_LISTS}, "camera_indices": []}
+
+
+def _sample_result_snapshot(
+    collections: dict[str, list[dict[str, Any]]],
+    starts: dict[str, int],
+    camera_indices: list[int],
+) -> dict[str, Any]:
+    result = {
+        key: list(collections[key][starts[key] :])
+        for key in SAMPLE_RESULT_LISTS
+    }
+    result["camera_indices"] = camera_indices
+    return result
+
+
+def _write_checkpoint_queue(
+    run_dir: Path, queue: list[dict[str, Any]]
+) -> None:
+    for checkpoint in queue:
+        path = write_sample_checkpoint(
+            run_dir,
+            checkpoint["sample_id"],
+            checkpoint["cache_identity"],
+            checkpoint["status"],
+            checkpoint["results"],
+            checkpoint.get("failure_reasons"),
+        )
+        print(f"[CHECKPOINT] Saved {path.name} ({checkpoint['status']})")
+    queue.clear()
+
+
 def _load_fvd_features(path: str | None) -> tuple[np.ndarray | None, np.ndarray | None, str | None]:
     if path is None:
         return None, None, "No compatible precomputed clip feature file was supplied"
@@ -233,7 +452,16 @@ def _unavailable_group(name: str, reason: str) -> dict[str, Any]:
 def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]:
     """Execute selected offline metrics and write all meaningful reports."""
     files = discover_npz_files(args.input_dir)
-    run_dir = create_run_directory(args.output_dir)
+    if args.resume_run:
+        run_dir = Path(args.resume_run).expanduser().resolve()
+        if not run_dir.is_dir():
+            raise FileNotFoundError(f"Resume run directory does not exist: {run_dir}")
+        print(f"[RESUME] Loaded existing run: {run_dir}")
+        prior_metadata, prior_metadata_error = read_run_metadata(run_dir)
+    else:
+        run_dir = create_run_directory(args.output_dir)
+        prior_metadata = None
+        prior_metadata_error = None
     requested = args.requested_metrics
     run_id = run_dir.name
 
@@ -295,6 +523,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 fid_reason = f"Could not initialize FID from local weights: {exc}"
 
     lpips_model = None
+    lpips_reason = None
     if "lpips" in requested:
         lpips_model, lpips_reason = load_local_lpips(
             args.lpips_network, args.lpips_weights, args.device
@@ -340,6 +569,119 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         if cvfc_reason:
             unavailable.append(_unavailable_group("cross_view_feature_consistency", cvfc_reason))
 
+    sample_cache_configuration = _sample_metric_configuration(
+        args,
+        detector,
+        detector_reason,
+        tracking_reason,
+        lpips_model,
+        lpips_reason,
+        cvfc_model,
+        cvfc_reason,
+    )
+    run_configuration = _run_configuration(args, files)
+    run_configuration["global_metric_inputs"]["fid"]["resolved_weights"] = (
+        file_fingerprint(fid_weights_path)
+    )
+    prior_configuration = (
+        prior_metadata.get("configuration") if prior_metadata is not None else None
+    )
+    cache_metadata_usable = (
+        prior_metadata is not None and isinstance(prior_configuration, dict)
+    )
+    if args.resume_run and not cache_metadata_usable:
+        print(
+            "[RESUME] Checkpoint reuse disabled: "
+            f"{prior_metadata_error or 'saved run configuration is missing or invalid'}"
+        )
+    elif cache_metadata_usable:
+        changed_keys = sorted(
+            key
+            for key in set(prior_configuration) | set(run_configuration)
+            if stable_identity(prior_configuration.get(key))
+            != stable_identity(run_configuration.get(key))
+        )
+        if changed_keys:
+            print(
+                "[RESUME] Configuration changed for: "
+                + ", ".join(changed_keys)
+                + "; sample identities will be checked individually and FID/FVD "
+                "will be recomputed from all current inputs"
+            )
+    run_metadata = {
+        "checkpoint_schema_version": CHECKPOINT_SCHEMA_VERSION,
+        "run_id": run_id,
+        "updated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "configuration": run_configuration,
+        "sample_cache_configuration": sample_cache_configuration,
+        "global_metric_resume_policy": {
+            "fid": "recompute from all currently discovered samples on every run/resume",
+            "fvd": "recompute from all current input files or the current feature file",
+        },
+    }
+    write_run_metadata(run_dir, run_metadata)
+
+    cache_inputs: dict[str, dict[str, Any]] = {}
+    cached_samples: dict[str, dict[str, Any]] = {}
+    may_reuse_checkpoints = bool(
+        args.resume_run and not args.force and cache_metadata_usable
+    )
+    if args.resume_run and args.force:
+        print("[RESUME] --force selected; existing sample checkpoints will be ignored")
+    for path in files:
+        sample_id = str(path.resolve())
+        source_fingerprint = file_fingerprint(path)
+        trajectory_id = _sample_trajectory_id(path)
+        annotation_identity = _annotation_cache_identity(
+            args.annotation_root, trajectory_id
+        )
+        cache_identity = build_sample_cache_identity(
+            path,
+            source_fingerprint.get("sha256") if source_fingerprint else None,
+            annotation_identity,
+            sample_cache_configuration,
+        )
+        cache_inputs[sample_id] = {
+            "cache_identity": cache_identity,
+            "trajectory_id": trajectory_id,
+            "npz_sha256": (
+                source_fingerprint.get("sha256") if source_fingerprint else None
+            ),
+            "hashable": _sample_inputs_are_hashable(
+                source_fingerprint,
+                annotation_identity,
+                sample_cache_configuration,
+            ),
+        }
+        if may_reuse_checkpoints:
+            if cache_inputs[sample_id]["hashable"]:
+                checkpoint, rejection_reason = load_sample_checkpoint(
+                    run_dir, sample_id, cache_identity
+                )
+                if checkpoint is not None:
+                    cached_samples[sample_id] = checkpoint
+                elif rejection_reason != "checkpoint does not exist":
+                    print(f"[RESUME] Recompute {path.name}: {rejection_reason}")
+            else:
+                print(f"[RESUME] Recompute {path.name}: required content hash is unavailable")
+    run_metadata["global_metric_identity"] = stable_identity(
+        {
+            "requested_global_metrics": sorted(requested & {"fid", "fvd"}),
+            "configuration": run_configuration["global_metric_inputs"],
+            "input_npz": [
+                {"path": sample_id, "sha256": cache_inputs[sample_id]["npz_sha256"]}
+                for sample_id in sorted(cache_inputs)
+            ],
+        }
+    )
+    run_metadata["input_sample_count"] = len(files)
+    write_run_metadata(run_dir, run_metadata)
+    if args.resume_run:
+        print(
+            f"[RESUME] Reusing {len(cached_samples)} completed samples; "
+            f"pending samples: {len(files) - len(cached_samples)}"
+        )
+
     frame_rows: list[dict[str, Any]] = []
     interaction_rows: list[dict[str, Any]] = []
     object_rows: list[dict[str, Any]] = []
@@ -354,23 +696,108 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
     camera_ids_seen: set[int] = set()
     visual_dir = run_dir / "visualizations"
     sample_count = valid_count = 0
+    result_collections = {
+        "frame_rows": frame_rows,
+        "interaction_rows": interaction_rows,
+        "object_rows": object_rows,
+        "object_camera_rows": object_camera_rows_all,
+        "physical_rows": physical_rows,
+        "physical_camera_rows": physical_camera_rows_all,
+        "validation": validation,
+        "action_frame_rows": action_frame_rows,
+        "recorded_action_frame_rows": recorded_action_frame_rows,
+        "multiview_frame_rows": multiview_frame_rows,
+        "camera_pair_frame_rows": camera_pair_frame_rows,
+        "unavailable": unavailable,
+    }
+    checkpoint_queue: list[dict[str, Any]] = []
 
     for path, sample, load_error in iter_samples(files, frame_stride=args.frame_stride):
         sample_count += 1
+        sample_id = str(path.resolve())
         if sample is None:
-            validation.append(validation_failure(str(path), load_error or "Unknown load error"))
-            interaction_rows.append(
+            reason = load_error or "Unknown load error"
+            validation_item = validation_failure(str(path), reason)
+            interaction = {
+                "sample_id": sample_id,
+                "file": sample_id,
+                "status": "invalid",
+                "validation_reason": reason,
+            }
+            validation.append(validation_item)
+            interaction_rows.append(interaction)
+            results = _empty_sample_results()
+            results["validation"].append(validation_item)
+            results["interaction_rows"].append(interaction)
+            cache_input = cache_inputs[sample_id]
+            checkpoint_queue.append(
                 {
-                    "sample_id": str(path.resolve()),
-                    "file": str(path.resolve()),
-                    "status": "invalid",
-                    "validation_reason": load_error,
+                    "sample_id": sample_id,
+                    "cache_identity": cache_input["cache_identity"],
+                    "status": "failed",
+                    "failure_reasons": [reason],
+                    "results": results,
                 }
             )
+            if len(checkpoint_queue) >= args.checkpoint_every:
+                _write_checkpoint_queue(run_dir, checkpoint_queue)
             print(f"[INVALID] {path}: {load_error}")
             continue
 
         sample_id = _sample_id(sample)
+        cache_input = cache_inputs[sample_id]
+        if cache_input["trajectory_id"] != sample.trajectory_id:
+            source_fingerprint = file_fingerprint(path)
+            annotation_identity = _annotation_cache_identity(
+                args.annotation_root, sample.trajectory_id
+            )
+            cache_input = {
+                "trajectory_id": sample.trajectory_id,
+                "cache_identity": build_sample_cache_identity(
+                    path,
+                    source_fingerprint.get("sha256") if source_fingerprint else None,
+                    annotation_identity,
+                    sample_cache_configuration,
+                ),
+                "npz_sha256": (
+                    source_fingerprint.get("sha256") if source_fingerprint else None
+                ),
+                "hashable": _sample_inputs_are_hashable(
+                    source_fingerprint,
+                    annotation_identity,
+                    sample_cache_configuration,
+                ),
+            }
+            cache_inputs[sample_id] = cache_input
+            cached_samples.pop(sample_id, None)
+
+        camera_ids_seen.update(range(sample.ground_truth.shape[0]))
+        if fid_metric is not None:
+            try:
+                added_frames = update_fid_metric(
+                    fid_metric,
+                    sample.ground_truth,
+                    sample.prediction,
+                    args.fid_batch_size,
+                    args.device,
+                )
+                fid_real_frame_count += added_frames
+                fid_generated_frame_count += added_frames
+            except (ImportError, OSError, TypeError, ValueError, RuntimeError) as exc:
+                fid_reason = f"FID feature extraction failed for {sample.path}: {exc}"
+                fid_metric = None
+
+        cached_results = cached_samples.get(sample_id)
+        if cached_results is not None:
+            for key in SAMPLE_RESULT_LISTS:
+                result_collections[key].extend(cached_results[key])
+            valid_count += int(cached_results["validation"][0]["status"] == "valid")
+            camera_ids_seen.update(cached_results["camera_indices"])
+            print(f"[RESUME] Reused {sample_count}/{len(files)} {sample.path.name}")
+            continue
+
+        starts = {key: len(rows) for key, rows in result_collections.items()}
+        sample_failure_reasons: list[str] = []
         annotation = (
             load_annotation(
                 sample,
@@ -402,21 +829,6 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         validation.append(validation_item)
         sample_is_valid = validation_item["status"] == "valid"
         valid_count += int(sample_is_valid)
-        camera_ids_seen.update(range(sample.ground_truth.shape[0]))
-        if fid_metric is not None:
-            try:
-                added_frames = update_fid_metric(
-                    fid_metric,
-                    sample.ground_truth,
-                    sample.prediction,
-                    args.fid_batch_size,
-                    args.device,
-                )
-                fid_real_frame_count += added_frames
-                fid_generated_frame_count += added_frames
-            except (ImportError, OSError, TypeError, ValueError, RuntimeError) as exc:
-                fid_reason = f"FID feature extraction failed for {sample.path}: {exc}"
-                fid_metric = None
         sample_metric_rows: list[dict[str, Any]] = []
         pixel_rows: list[dict[str, Any]] = []
         temporal_rows: list[dict[str, Any]] = []
@@ -436,6 +848,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                         )
                     )
             except (ImportError, ValueError, RuntimeError) as exc:
+                sample_failure_reasons.append(f"visual: {exc}")
                 unavailable.append(_unavailable_group(f"visual:{sample_id}", str(exc)))
         if "temporal" in requested and sample.ground_truth.shape[1] > 1:
             try:
@@ -444,6 +857,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 )
                 sample_metric_rows.extend(temporal_rows)
             except (ImportError, ValueError, RuntimeError) as exc:
+                sample_failure_reasons.append(f"temporal: {exc}")
                 unavailable.append(_unavailable_group(f"temporal:{sample_id}", str(exc)))
         if lpips_model is not None:
             try:
@@ -456,6 +870,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 )
                 sample_metric_rows.extend(lpips_rows)
             except (ImportError, ValueError, RuntimeError) as exc:
+                sample_failure_reasons.append(f"lpips: {exc}")
                 unavailable.append(_unavailable_group(f"lpips:{sample_id}", str(exc)))
 
         # Detection results are shared by tracking metrics and category agreement.
@@ -540,6 +955,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 sample_detector_error = (
                     f"Configured detector/tracking failed for {sample_id}: {exc}"
                 )
+                sample_failure_reasons.append(sample_detector_error)
                 
                 if "objects" in requested:
                     unavailable.append(
@@ -589,6 +1005,9 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                             if index < len(flow):
                                 row["image_motion_magnitude"] = float(flow[index])
                     except ImportError as exc:
+                        sample_failure_reasons.append(
+                            f"action image motion correlation: {exc}"
+                        )
                         action_values["action_image_motion_correlation_reason"] = (
                             f"Image-space motion correlation unavailable: {exc}"
                         )
@@ -606,6 +1025,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                     annotation.reason if annotation is not None else None
                 )
             except (ImportError, TypeError, ValueError, RuntimeError) as exc:
+                sample_failure_reasons.append(f"action: {exc}")
                 action_values = {
                     "action_data_status": "unavailable",
                     "action_data_reason": f"Action diagnostics failed: {exc}",
@@ -635,6 +1055,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                             )
                         )
             except (TypeError, ValueError, RuntimeError) as exc:
+                sample_failure_reasons.append(f"recorded action: {exc}")
                 recorded_action_values = {
                     metric: None for metric in RECORDED_ACTION_METRICS
                 }
@@ -868,6 +1289,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                         ),
                     )
             except (ImportError, OSError, ValueError) as exc:
+                sample_failure_reasons.append(f"visualization: {exc}")
                 unavailable.append(_unavailable_group(f"visualization:{sample_id}", str(exc)))
         if args.save_comparison_videos:
             try:
@@ -877,9 +1299,27 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                     sample, visual_dir / "comparison_videos" / _safe_name(sample.trajectory_id)
                 )
             except (ImportError, OSError, ValueError, RuntimeError) as exc:
+                sample_failure_reasons.append(f"comparison video: {exc}")
                 unavailable.append(_unavailable_group(f"comparison_video:{sample_id}", str(exc)))
+        results = _sample_result_snapshot(
+            result_collections,
+            starts,
+            list(range(sample.ground_truth.shape[0])),
+        )
+        checkpoint_queue.append(
+            {
+                "sample_id": sample_id,
+                "cache_identity": cache_inputs[sample_id]["cache_identity"],
+                "status": "failed" if sample_failure_reasons else "completed",
+                "failure_reasons": sample_failure_reasons,
+                "results": results,
+            }
+        )
+        if len(checkpoint_queue) >= args.checkpoint_every:
+            _write_checkpoint_queue(run_dir, checkpoint_queue)
         print(f"[EVALUATED {sample_count}/{len(files)}] {sample.path.name}")
 
+    _write_checkpoint_queue(run_dir, checkpoint_queue)
     trajectory_rows = aggregate_rows(interaction_rows, ("trajectory_id",))
     source_frame_metric_names = tuple(
         (RECORDED_ACTION_METRICS if "action" in requested else ())
@@ -1103,6 +1543,26 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
     else:
         fvd_status = {"metric": "fvd", "status": "not_requested", "value": None, "reason": None}
 
+    resolved_global_weights = {
+        "fid": file_fingerprint(fid_weights_path),
+        "fvd": file_fingerprint(fvd_status.get("weights_path")),
+    }
+    global_metric_identity = stable_identity(
+        {
+            "requested_global_metrics": sorted(requested & {"fid", "fvd"}),
+            "configuration": run_configuration["global_metric_inputs"],
+            "resolved_weights": resolved_global_weights,
+            "input_npz": [
+                {"path": sample_id, "sha256": cache_inputs[sample_id]["npz_sha256"]}
+                for sample_id in sorted(cache_inputs)
+            ],
+        }
+    )
+    run_metadata["global_metric_identity"] = global_metric_identity
+    run_metadata["resolved_global_weights"] = resolved_global_weights
+    run_metadata["updated_at_utc"] = datetime.now(timezone.utc).isoformat()
+    write_run_metadata(run_dir, run_metadata)
+
     if "objects" in requested and detector is None and not any(
         item["metric_group"] == "objects" for item in unavailable
     ):
@@ -1121,6 +1581,19 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
     config["requested_metrics"] = sorted(requested)
     config["input_paths"] = [str(path.resolve()) for path in files]
     config["run_id"] = run_id
+    config["checkpointing"] = {
+        "enabled": True,
+        "checkpoint_every": args.checkpoint_every,
+        "resume_run": bool(args.resume_run),
+        "force": args.force,
+        "schema_version": CHECKPOINT_SCHEMA_VERSION,
+        "run_metadata_file": "run_metadata.json",
+    }
+    config["global_metric_resume_policy"] = {
+        "fid": "recomputed over all current samples on every run/resume",
+        "fvd": "recomputed over the complete current input set on every run/resume",
+    }
+    config["global_metric_identity"] = global_metric_identity
     cross_view_camera_pair_rows = summarize_camera_pairs(
         camera_pair_frame_rows, CVOA_METRICS + CVFC_METRICS
     )
@@ -1205,6 +1678,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "Gripper transition agreement is synchronized-series descriptive only, not causal evidence.",
             "Cross-view category agreement is limited by detector labels and per-view visibility; it is not object identity or 3D agreement.",
             "ResNet-50 cross-view feature similarity is a semantic proxy, not geometric correspondence.",
+            "FID and FVD are recomputed from all current inputs on every run/resume; global distribution results are never restored from sample checkpoints.",
         ],
         "validation_report": validation,
         "invalid_sample_count": sum(item["status"] == "invalid" for item in validation),

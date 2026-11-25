@@ -288,6 +288,62 @@ weights when they are not cached.
 
 ## Running
 
+### Resuming offline metric evaluations
+
+Start a new run as usual; completed samples are checkpointed after each sample
+by default:
+
+```powershell
+python -m eval.scripts.run_evaluation `
+  --input_dir PATH_TO_NPZ_FILES `
+  --output_dir eval/results `
+  --metrics all
+```
+
+Resume into the exact existing run directory, or force recomputation while
+continuing to use that directory:
+
+```powershell
+python -m eval.scripts.run_evaluation `
+  --input_dir PATH_TO_NPZ_FILES `
+  --resume-run eval/results/<existing_run_folder> `
+  --metrics all
+
+python -m eval.scripts.run_evaluation `
+  --input_dir PATH_TO_NPZ_FILES `
+  --resume-run eval/results/<existing_run_folder> `
+  --metrics all `
+  --force
+```
+
+Sample checkpoints are JSON files under `sample_checkpoints/`. They retain
+per-frame and per-interaction rows, object and physical rows, action and
+recorded-action rows, multiview and camera-pair rows, validation results,
+camera indices, and sample-scoped unavailable reasons. Writes use a temporary
+file and atomic replacement. A checkpoint is reused only when its schema,
+completed status, contents, absolute NPZ path and SHA-256, relevant annotation
+path and SHA-256, requested sample metric groups, frame stride, device, and
+applicable detector/tracker, LPIPS, batching, and visualization settings
+match. Corrupt, incomplete, failed, changed-input, or configuration-mismatched
+checkpoints are recomputed. Failed samples are recorded but are deliberately
+retried on a later resume. `run_metadata.json` records the run configuration
+and cache identities. `--checkpoint-every N` changes the write frequency from
+the default of one newly evaluated sample; setting a larger value trades
+checkpoint I/O for the possibility of repeating up to `N-1` samples after an
+interruption.
+
+`--force` ignores all existing sample checkpoints. Changed global-only
+settings such as FID/FVD weights do not invalidate compatible sample-level
+metrics, but those global metrics are never restored from a checkpoint:
+**FID is recomputed using all currently discovered samples, and FVD is
+recomputed using the complete current input set or the current precomputed
+feature file on every run and resume.** This preserves the existing dataset-
+level feature statistics, source-frame alignment, overlap deduplication, and
+clip reconstruction behavior. Consequently, global FID/FVD extraction may
+still take substantial time during resume. Detector plugin code is fingerprinted
+when importable, but external detector weight files are not introspected unless
+their identity is represented by the plugin source/configuration.
+
 ### Optional Qwen3-VL replay success classification
 
 This standalone path evaluates a complete saved replay trajectory against the

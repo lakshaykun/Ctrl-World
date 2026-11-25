@@ -75,8 +75,11 @@ def write_reports(
         "physical_violations": "physical_violations.csv",
     }
     for key, filename in names.items():
-        if write_csv(run_dir / filename, tables.get(key, [])):
+        report_path = run_dir / filename
+        if write_csv(report_path, tables.get(key, [])):
             written.append(filename)
+        elif report_path.is_file():
+            report_path.unlink()
     summary_with_outputs = dict(summary)
     summary_with_outputs["written_csv_files"] = written
     write_json(run_dir / "summary.json", summary_with_outputs)
