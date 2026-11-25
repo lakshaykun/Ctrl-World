@@ -155,7 +155,8 @@ The custom definitions are:
   reference detection divided by generated detections; range `[0,1]`, lower is
   better. This is detector disagreement, not proof of hallucination.
 - **Identity Switch Count**: number of changes in generated track ID matched
-  to the same reference track across observed frames; lower is better.
+  to the same reference track across observed frames; matches use same-label
+  greedy IoU ≥ 0.5; lower is better. Its existing definition is unchanged.
 - **Object Trajectory Error**: mean matched reference/generated box-center
   distance divided by the image diagonal; dimensionless, lower is better.
 - **Position Anomaly Rate (PAR)**: fraction of consecutive generated track
@@ -191,6 +192,49 @@ independently labeled contact times, object state ground truth, or calibrated
 geometry. Annotation-dependent metrics are explicitly unavailable when
 annotations are missing or cannot be aligned.
 
+When `action` is selected, the evaluator also validates the raw robot arrays
+from the same annotation JSON: six-dimensional Cartesian position commands and
+observations, seven-dimensional joint positions and joint velocity, and scalar
+gripper commands and observations. The extractor samples video frames from raw
+rows `[::3]`, and the supplied annotations satisfy
+`raw_length = 3 * video_length - 2`; source frame `s` therefore maps to raw row
+`3*s`. Each raw field is independently checked for its required width, finite
+numeric values, and `raw_length`, so a malformed raw field does not invalidate
+the aligned `states` metrics.
+
+The following seven diagnostics are reported per interaction and at trajectory
+and dataset levels, with explicit per-frame rows when source-frame indices are
+available. Every metric carries an availability status and reason:
+
+- **Cartesian translation command/observation MAE**: unavailable unless the
+  command-to-observation temporal convention is documented. The repository
+  does not establish whether an action row is a current command or a target
+  for the next observation, so the evaluator does not assume a one-step lag.
+- **Cartesian rotation component MAE**: unavailable for the same temporal
+  reason. The six-dimensional field's rotation parameterization and angle
+  convention are also undocumented; no wrapped or geodesic rotation error is
+  inferred.
+- **Joint-position command/observation MAE** and **gripper-position
+  command/observation MAE**: unavailable for the same undocumented temporal
+  convention; same-row equality is not assumed.
+- **Gripper transition agreement**: compares command and observed gripper
+  changes between adjacent stored source frames (raw indices `3*s` and
+  `3*(s+1)`). A transition is positive/negative at a native-unit magnitude of
+  at least `0.1`; intervals with no transition in either sequence are excluded.
+  The result is the fraction of scored intervals whose transition direction
+  agrees. It is a synchronized-series diagnostic, not causal evidence that a
+  command produced an observation.
+- **Joint-velocity consistency correlation** and **joint-velocity consistency
+  MAE**: unavailable because the annotations contain no timestamps or declared
+  raw control period, and the repository does not establish the units or
+  interval represented by `action.joint_velocity`.
+
+The raw-to-video row mapping is used only for indexing, not as evidence of
+command latency, velocity units, or physical time. Rotation/joint component
+errors are not silently unwrapped or converted. The existing action-motion
+correlations remain descriptive image-space diagnostics and do not fill in
+these unavailable raw metrics.
+
 ### Physical-consistency candidates
 
 - **Physical Violation Rate**: fraction of observed frames containing at least
@@ -209,7 +253,33 @@ Bounding-box overlap does not establish 3D penetration or collision.
 Applicable metrics are summarized separately per camera. No pixels or tracks
 are compared across cameras as if they were geometrically aligned. Cross-view
 geometry is explicitly unavailable without calibration or validated
-correspondences.
+correspondences. Two additional non-geometric proxies are reported when
+`multiview` is selected:
+
+- **Cross-View Object Agreement (CVOA)** compares the detected category sets
+  between every camera pair at the same source frame using Jaccard similarity
+  (`|A ∩ B| / |A ∪ B|`). It reports reference and generated agreement and
+  generated-minus-reference difference, along with valid pair counts. Two
+  empty category sets are not scored. This ignores multiplicity, object
+  identity, occlusion, and whether an object should be visible in both views.
+  It requires the configured local detector, but reuses the same detections as
+  object tracking when both metric groups are requested.
+- **Cross-View Feature Consistency (CVFC)** uses the fixed Torchvision
+  `ResNet50_Weights.IMAGENET1K_V2` model and its associated preprocessing.
+  For each synchronized frame and camera pair, it computes cosine similarity
+  between the 2048-dimensional pooled features, separately for reference and
+  generated images, plus the signed difference and absolute consistency error.
+  It is an ImageNet semantic-feature proxy, not geometric correspondence,
+  object identity, or calibrated 3D consistency.
+
+Both metrics require at least two views and valid source-frame indices. Pair
+scores are written to `metrics_per_camera.csv` with camera-pair IDs. Their
+per-frame rows are also written to `metrics_per_frame.csv`. Interaction
+summaries are kept separate; trajectory and dataset summaries deduplicate
+overlapping interaction windows by trajectory and source-frame index. The
+detector is initialized for `multiview` when CVOA is requested, even if
+`--tracker none` is selected. CVFC loads once per evaluation run and uses
+`--cvfc_batch_size` (default `32`).
 
 ### Dataset-level FID and FVD (optional)
 
@@ -237,12 +307,14 @@ per-interaction CSVs.
   video clips; at least two compatible clip features per distribution and
   `--fvd_extractor_name` provenance are required.
 
-The evaluator never downloads metric weights. FID uses `--fid_weights` or an
+FID uses `--fid_weights` or an
 already-cached Torch-Fidelity file named
 `weights-inception-2015-12-05-6726825d.pth`. Video FVD uses `--fvd_weights` or
 the I3D checkpoint already bundled in the local `cd-fvd` package. If weights,
 packages, source indices, or enough frames/clips are unavailable, the metric is
-reported as unavailable with a reason; no score is fabricated.
+reported as unavailable with a reason; no score is fabricated. CVFC uses the
+standard Torchvision ImageNet weight cache and may download the fixed ResNet-50
+weights when they are not cached.
 
 ## Running
 
@@ -336,6 +408,8 @@ list (or `all` alone). Other useful options are:
 - `--frame_stride`: positive integer, default `1`.
 - `--device`: `cpu` by default, or a requested CUDA device for LPIPS/detector.
 - `--batch_size`: positive LPIPS batch size, default `16`.
+- `--cvfc_batch_size`: positive CVFC feature-extraction batch size, default
+  `32`; used only when `multiview` is requested.
 - `--fid_batch_size`: positive, independent FID batch size, default `64`.
 - `--fid_weights`: local Torch-Fidelity Inception-v3 weights; otherwise the
   evaluator checks its standard local Torch cache.
@@ -375,6 +449,11 @@ interaction-level mean as one observation at trajectory/dataset level, so long
 interactions do not implicitly receive greater weight. Missing and non-finite
 values are excluded rather than treated as zero.
 
+The seven raw robot diagnostics, CVOA, and CVFC use per-source-frame rows.
+Trajectory and dataset values for these metrics deduplicate overlapping
+interaction windows by trajectory/source-frame (and camera pair where
+applicable), while per-interaction values remain independent.
+
 Interaction, trajectory, camera, horizon, and dataset summaries include mean,
 median, standard deviation, minimum, maximum, valid count, and invalid count
 where applicable. `metrics_per_object.csv` summarizes each generated track's
@@ -392,8 +471,9 @@ The implementation uses packages listed in the repository's `requirements.txt`,
 including TorchMetrics `1.8.2` for FID and `cd-fvd` for I3D FVD. TorchMetrics
 `1.8.2` supports PyTorch `>=2.0,<2.9`, compatible with the repository's pinned
 PyTorch `2.7.1`. Optional packages and local weights are needed only for the
-corresponding metric. The evaluator does not install packages, download
-weights, or initialize Ctrl-World.
+corresponding metric. CVFC uses the already-declared `torchvision` dependency
+and its fixed ImageNet weights. The evaluator does not install packages or
+initialize Ctrl-World.
 
 Reproducibility details (input paths, chosen metrics, device, sampling,
 detector/tracker settings, annotation root, and preprocessing assumptions)

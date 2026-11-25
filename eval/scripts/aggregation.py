@@ -106,6 +106,156 @@ def dataset_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def aggregate_unique_source_frame_metrics(
+    rows: list[dict[str, Any]], metric_names: tuple[str, ...]
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    """Aggregate frame metrics once per trajectory/source-frame across overlaps."""
+    ordered = sorted(
+        rows,
+        key=lambda row: (
+            str(row.get("trajectory_id"))
+            if row.get("trajectory_id") is not None
+            else f"~{row.get('sample_id')}",
+            int(row.get("source_frame_index", -1)),
+            int(row.get("interaction_index") or 0),
+            str(row.get("sample_id")),
+        ),
+    )
+    unique: dict[tuple[str, int], dict[str, Any]] = {}
+    for row in ordered:
+        if row.get("source_frame_index") is None:
+            continue
+        trajectory_key = (
+            str(row.get("trajectory_id"))
+            if row.get("trajectory_id") is not None
+            else f"sample:{row.get('sample_id')}"
+        )
+        key = (trajectory_key, int(row["source_frame_index"]))
+        selected = unique.setdefault(
+            key,
+            {
+                "trajectory_id": row.get("trajectory_id"),
+                "sample_id": row.get("sample_id"),
+                "source_frame_index": int(row["source_frame_index"]),
+            },
+        )
+        for metric in metric_names:
+            if metric in row and metric not in selected:
+                if (
+                    metric == "gripper_transition_agreement"
+                    and row.get(f"{metric}_status") == "not_applicable"
+                ):
+                    continue
+                selected[metric] = row.get(metric)
+                selected[f"{metric}_status"] = row.get(f"{metric}_status")
+                selected[f"{metric}_reason"] = row.get(f"{metric}_reason")
+
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for (trajectory_key, _), row in unique.items():
+        grouped[trajectory_key].append(row)
+
+    trajectory_rows = []
+    for trajectory_key, source_rows in sorted(grouped.items()):
+        record: dict[str, Any] = {
+            "trajectory_id": source_rows[0].get("trajectory_id"),
+            "source_frame_count": len(source_rows),
+        }
+        for metric in metric_names:
+            metric_rows = [row for row in source_rows if metric in row]
+            values = np.asarray(
+                [
+                    float(row[metric])
+                    for row in metric_rows
+                    if row.get(metric) is not None
+                    and isinstance(row.get(metric), (int, float, np.number))
+                    and np.isfinite(row[metric])
+                ],
+                dtype=np.float64,
+            )
+            valid_count = int(len(values))
+            invalid_count = len(metric_rows) - valid_count
+            partial_count = sum(
+                row.get(f"{metric}_status") == "partially_available"
+                for row in metric_rows
+            )
+            record[metric] = float(values.mean()) if valid_count else None
+            record[f"{metric}_median"] = float(np.median(values)) if valid_count else None
+            record[f"{metric}_std"] = float(values.std()) if valid_count else None
+            record[f"{metric}_min"] = float(values.min()) if valid_count else None
+            record[f"{metric}_max"] = float(values.max()) if valid_count else None
+            record[f"{metric}_valid_count"] = valid_count
+            record[f"{metric}_invalid_count"] = invalid_count
+            record[f"{metric}_status"] = (
+                "available"
+                if valid_count and not invalid_count and not partial_count
+                else "partially_available"
+                if valid_count
+                else "unavailable"
+            )
+            if invalid_count or partial_count or not metric_rows:
+                record[f"{metric}_reason"] = next(
+                    (
+                        row.get(f"{metric}_reason")
+                        for row in metric_rows
+                        if row.get(f"{metric}_reason")
+                    ),
+                    "No aligned source-frame rows were available for this metric"
+                    if not metric_rows
+                    else "No valid value for one or more unique source frames",
+                )
+        trajectory_rows.append(record)
+
+    dataset_metrics: dict[str, dict[str, Any]] = {}
+    all_source_rows = list(unique.values())
+    for metric in metric_names:
+        metric_rows = [row for row in all_source_rows if metric in row]
+        values = np.asarray(
+            [
+                float(row[metric])
+                for row in metric_rows
+                if row.get(metric) is not None
+                and isinstance(row.get(metric), (int, float, np.number))
+                and np.isfinite(row[metric])
+            ],
+            dtype=np.float64,
+        )
+        valid_count = int(len(values))
+        invalid_count = len(metric_rows) - valid_count
+        partial_count = sum(
+            row.get(f"{metric}_status") == "partially_available"
+            for row in metric_rows
+        )
+        result = {
+            "mean": float(values.mean()) if valid_count else None,
+            "median": float(np.median(values)) if valid_count else None,
+            "standard_deviation": float(values.std()) if valid_count else None,
+            "minimum": float(values.min()) if valid_count else None,
+            "maximum": float(values.max()) if valid_count else None,
+            "valid_count": valid_count,
+            "invalid_count": invalid_count,
+            "status": (
+                "available"
+                if valid_count and not invalid_count and not partial_count
+                else "partially_available"
+                if valid_count
+                else "unavailable"
+            ),
+        }
+        if invalid_count or partial_count or not metric_rows:
+            result["reason"] = next(
+                (
+                    row.get(f"{metric}_reason")
+                    for row in metric_rows
+                    if row.get(f"{metric}_reason")
+                ),
+                "No aligned source-frame rows were available for this metric"
+                if not metric_rows
+                else "No valid value for one or more unique source frames",
+            )
+        dataset_metrics[metric] = result
+    return trajectory_rows, dataset_metrics
+
+
 def aggregate_object_tracks(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Summarize each generated track with one object-level observation."""
     grouped: dict[tuple[Any, Any, Any], list[dict[str, Any]]] = defaultdict(list)

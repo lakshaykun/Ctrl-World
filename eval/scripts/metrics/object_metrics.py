@@ -131,11 +131,22 @@ def _coerce_detection(value: Detection | dict[str, Any]) -> Detection:
 
 def track_video(video: np.ndarray, detector: Detector, tracker: Tracker) -> list[list[dict[str, Any]]]:
     """Run one detector and tracker once over a video, reusing results downstream."""
-    all_frames = []
-    for frame in video:
-        detections = [_coerce_detection(item) for item in detector.detect(frame)]
-        all_frames.append(tracker.update(detections))
-    return all_frames
+    return track_detections(detect_video(video, detector), tracker)
+
+
+def detect_video(video: np.ndarray, detector: Detector) -> list[list[Detection]]:
+    """Run a detector once per frame, returning detections for any consumer."""
+    return [
+        [_coerce_detection(item) for item in detector.detect(frame)]
+        for frame in video
+    ]
+
+
+def track_detections(
+    detections_by_frame: list[list[Detection]], tracker: Tracker
+) -> list[list[dict[str, Any]]]:
+    """Track already-computed detections without repeating detector inference."""
+    return [tracker.update(detections) for detections in detections_by_frame]
 
 
 def _box(track: dict[str, Any]) -> np.ndarray:

@@ -39,6 +39,9 @@ class AnnotationData:
     joints_reason: str | None = None
     texts: list[str] | None = None
     video_length: int | None = None
+    raw_length: int | None = None
+    raw_fields: dict[str, np.ndarray] = field(default_factory=dict)
+    raw_field_reasons: dict[str, str] = field(default_factory=dict)
 
 
 def json_safe(value: Any) -> Any:

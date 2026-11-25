@@ -12,12 +12,35 @@ from typing import Any
 
 import numpy as np
 
-from .aggregation import aggregate_object_tracks, aggregate_rows, dataset_summary
+from .aggregation import (
+    aggregate_object_tracks,
+    aggregate_rows,
+    aggregate_unique_source_frame_metrics,
+    dataset_summary,
+)
 from .annotation_loader import load_annotation
 from .data_loader import discover_npz_files, iter_samples
-from .metrics.action_consistency import compute_action_diagnostics
-from .metrics.multiview_metrics import summarize_cameras
-from .metrics.object_metrics import Detector, IoUTracker, compute_object_metrics, track_video
+from .metrics.action_consistency import (
+    RECORDED_ACTION_METRICS,
+    compute_action_diagnostics,
+    compute_recorded_action_metrics,
+)
+from .metrics.multiview_metrics import (
+    CVOA_METRICS,
+    CVFC_METRICS,
+    compute_cvoa,
+    compute_cvfc,
+    load_cvfc_model,
+    summarize_camera_pairs,
+    summarize_cameras,
+)
+from .metrics.object_metrics import (
+    Detector,
+    IoUTracker,
+    compute_object_metrics,
+    detect_video,
+    track_detections,
+)
 from .metrics.perceptual_metrics import (
     compute_lpips,
     frechet_distance_from_features,
@@ -72,6 +95,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--device", default="cpu", help="Device for optional neural metrics (cpu or cuda)")
     parser.add_argument("--batch_size", type=int, default=16, help="Batch size for LPIPS")
+    parser.add_argument(
+        "--cvfc_batch_size", type=int, default=32, help="Independent batch size for CVFC"
+    )
     parser.add_argument("--fid_batch_size", type=int, default=64, help="Independent batch size for FID")
     parser.add_argument("--frame_stride", type=int, default=1, help="Evaluate every Nth stored frame")
     parser.add_argument("--save_visualizations", action="store_true")
@@ -110,6 +136,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.batch_size < 1:
         parser.error("--batch_size must be positive")
+    if args.cvfc_batch_size < 1:
+        parser.error("--cvfc_batch_size must be positive")
     if args.fid_batch_size < 1:
         parser.error("--fid_batch_size must be positive")
     if args.fvd_clip_len < 1 or args.fvd_stride < 1:
@@ -218,6 +246,25 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "Detector plugin outputs xyxy boxes; greedy IoU tracker; custom image-space metrics"
         ),
         "action_states": "annotation states are 7D; first 3 dimensions used for translation step",
+        "recorded_action_metrics": {
+            "raw_to_video_alignment": "raw_index = 3 * source_frame_index",
+            "command_observation_alignment": (
+                "MAEs unavailable because command/observation temporal semantics are undocumented"
+            ),
+            "gripper_transition_threshold_native_units": 0.1,
+            "velocity_metrics": (
+                "unavailable without raw timestamps/control period and declared velocity units"
+            ),
+        },
+        "cross_view_object_agreement": (
+            "pairwise category-set Jaccard; synchronized source frames; both-empty pairs excluded"
+        ),
+        "cross_view_feature_consistency": {
+            "extractor": "Torchvision ResNet-50 IMAGENET1K_V2",
+            "preprocessing": "associated weights.transforms()",
+            "batch_size": args.cvfc_batch_size,
+            "metric": "mean pairwise cosine similarity across synchronized views",
+        },
         "fvd": {
             "mode": (
                 "precomputed_clip_features"
@@ -263,21 +310,41 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
 
     detector = None
     detector_reason = None
-    if "objects" in requested or "physical" in requested:
+    tracking_reason = None
+    tracking_requested = "objects" in requested or "physical" in requested
+    if tracking_requested and args.tracker == "none":
+        tracking_reason = "Object and physical metrics require tracking; --tracker none was selected"
+    detector_needed = "multiview" in requested or (
+        tracking_requested and args.tracker != "none"
+    )
+    if detector_needed:
         if args.detector == "none":
             detector_reason = "No local object detector was configured"
-        elif args.tracker == "none":
-            detector_reason = "Object tracking is required but --tracker none was selected"
         else:
             try:
                 detector = _plugin_factory(args.detector, args.device)
             except (ImportError, AttributeError, TypeError, ValueError) as exc:
                 detector_reason = f"Could not initialize the configured local detector: {exc}"
         if detector_reason:
-            if "objects" in requested:
-                unavailable.append(_unavailable_group("objects", detector_reason))
-            if "physical" in requested:
-                unavailable.append(_unavailable_group("physical", detector_reason))
+            if tracking_requested:
+                if "objects" in requested:
+                    unavailable.append(_unavailable_group("objects", detector_reason))
+                if "physical" in requested:
+                    unavailable.append(_unavailable_group("physical", detector_reason))
+            if "multiview" in requested:
+                unavailable.append(_unavailable_group("cross_view_object_agreement", detector_reason))
+    if tracking_reason:
+        if "objects" in requested:
+            unavailable.append(_unavailable_group("objects", tracking_reason))
+        if "physical" in requested:
+            unavailable.append(_unavailable_group("physical", tracking_reason))
+
+    cvfc_model = None
+    cvfc_reason = None
+    if "multiview" in requested:
+        cvfc_model, cvfc_reason = load_cvfc_model(args.device)
+        if cvfc_reason:
+            unavailable.append(_unavailable_group("cross_view_feature_consistency", cvfc_reason))
 
     frame_rows: list[dict[str, Any]] = []
     interaction_rows: list[dict[str, Any]] = []
@@ -287,6 +354,9 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
     physical_camera_rows_all: list[dict[str, Any]] = []
     validation: list[dict[str, Any]] = []
     action_frame_rows: list[dict[str, Any]] = []
+    recorded_action_frame_rows: list[dict[str, Any]] = []
+    multiview_frame_rows: list[dict[str, Any]] = []
+    camera_pair_frame_rows: list[dict[str, Any]] = []
     camera_ids_seen: set[int] = set()
     visual_dir = run_dir / "visualizations"
     sample_count = valid_count = 0
@@ -308,7 +378,11 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
 
         sample_id = _sample_id(sample)
         annotation = (
-            load_annotation(sample, args.annotation_root)
+            load_annotation(
+                sample,
+                args.annotation_root,
+                include_raw_fields="action" in requested,
+            )
             if args.annotation_root is not None
             else None
         )
@@ -316,7 +390,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             unavailable.append(
                 _unavailable_group(
                     "action",
-                    "No --annotation_root supplied; aligned states and joints are unavailable",
+                    "No --annotation_root supplied; aligned state and raw command metrics are unavailable",
                 )
             )
         elif (
@@ -390,10 +464,11 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             except (ImportError, ValueError, RuntimeError) as exc:
                 unavailable.append(_unavailable_group(f"lpips:{sample_id}", str(exc)))
 
-        # Object detection and tracking are executed once per video and reused
-        # for object consistency, action summaries, and physical candidates.
+        # Detection results are shared by tracking metrics and category agreement.
         tracks_by_camera: list[list[list[dict[str, Any]]]] = []
         reference_tracks_by_camera: list[list[list[dict[str, Any]]]] = []
+        reference_detections_by_camera: list[list[list[Any]]] = []
+        generated_detections_by_camera: list[list[list[Any]]] = []
         object_camera_rows = []
         sample_physical_events = []
         physical_camera_rows = []
@@ -401,15 +476,23 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         if detector is not None:
             try:
                 for camera in range(sample.prediction.shape[0]):
-                    reference_tracks = track_video(
-                        sample.ground_truth[camera], detector, IoUTracker()
-                    )
-                    generated_tracks = track_video(
-                        sample.prediction[camera], detector, IoUTracker()
-                    )
-                    reference_tracks_by_camera.append(reference_tracks)
-                    tracks_by_camera.append(generated_tracks)
-                    if "objects" in requested:
+                    reference_detections = detect_video(sample.ground_truth[camera], detector)
+                    generated_detections = detect_video(sample.prediction[camera], detector)
+                    reference_detections_by_camera.append(reference_detections)
+                    generated_detections_by_camera.append(generated_detections)
+                    if args.tracker != "none":
+                        reference_tracks = track_detections(
+                            reference_detections, IoUTracker()
+                        )
+                        generated_tracks = track_detections(
+                            generated_detections, IoUTracker()
+                        )
+                        reference_tracks_by_camera.append(reference_tracks)
+                        tracks_by_camera.append(generated_tracks)
+                    else:
+                        reference_tracks = []
+                        generated_tracks = []
+                    if "objects" in requested and args.tracker != "none":
                         object_values, current_objects = compute_object_metrics(
                             reference_tracks,
                             generated_tracks,
@@ -431,7 +514,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                         object_camera_rows.append(
                             {"sample_id": sample_id, "camera_index": camera, **object_values}
                         )
-                    if "physical" in requested:
+                    if "physical" in requested and args.tracker != "none":
                         events = detect_overlap_candidates(
                             generated_tracks, sample_id, camera
                         )
@@ -461,20 +544,32 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                         )
             except (ImportError, TypeError, ValueError, RuntimeError) as exc:
                 sample_detector_error = (
-                    f"Configured detector/tracker failed for {sample_id}: {exc}"
+                    f"Configured detector/tracking failed for {sample_id}: {exc}"
                 )
                 detector_reason = sample_detector_error
-                unavailable.append(
-                    _unavailable_group(f"objects:{sample_id}", sample_detector_error)
-                )
-                unavailable.append(
-                    _unavailable_group(f"physical:{sample_id}", sample_detector_error)
-                )
+                if "objects" in requested:
+                    unavailable.append(
+                        _unavailable_group(f"objects:{sample_id}", sample_detector_error)
+                    )
+                if "physical" in requested:
+                    unavailable.append(
+                        _unavailable_group(f"physical:{sample_id}", sample_detector_error)
+                    )
+                if "multiview" in requested:
+                    unavailable.append(
+                        _unavailable_group(
+                            f"cross_view_object_agreement:{sample_id}", sample_detector_error
+                        )
+                    )
                 tracks_by_camera = []
+                reference_tracks_by_camera = []
+                reference_detections_by_camera = []
+                generated_detections_by_camera = []
         object_camera_rows_all.extend(object_camera_rows)
         physical_camera_rows_all.extend(physical_camera_rows)
 
         action_values: dict[str, Any] = {}
+        recorded_action_values: dict[str, Any] = {}
         if "action" in requested:
             try:
                 action_values, current_action_rows = compute_action_diagnostics(
@@ -522,6 +617,83 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                     "action_data_reason": f"Action diagnostics failed: {exc}",
                 }
                 unavailable.append(_unavailable_group(f"action:{sample_id}", str(exc)))
+            try:
+                recorded_action_values, current_recorded_rows = (
+                    compute_recorded_action_metrics(
+                        annotation,
+                        sample.frame_indices,
+                        sample_id,
+                        sample.trajectory_id,
+                        sample.interaction_index,
+                    )
+                )
+                for row in current_recorded_rows:
+                    row["start_frame_index"] = sample.start_frame_index
+                    row["fps"] = sample.fps
+                recorded_action_frame_rows.extend(current_recorded_rows)
+                for metric in RECORDED_ACTION_METRICS:
+                    if recorded_action_values.get(f"{metric}_status") == "unavailable":
+                        unavailable.append(
+                            _unavailable_group(
+                                f"{metric}:{sample_id}",
+                                recorded_action_values.get(f"{metric}_reason")
+                                or "Recorded-action metric is unavailable",
+                            )
+                        )
+            except (TypeError, ValueError, RuntimeError) as exc:
+                recorded_action_values = {
+                    metric: None for metric in RECORDED_ACTION_METRICS
+                }
+                for metric in RECORDED_ACTION_METRICS:
+                    recorded_action_values[f"{metric}_status"] = "unavailable"
+                    recorded_action_values[f"{metric}_reason"] = (
+                        f"Recorded-action metrics failed: {exc}"
+                    )
+                unavailable.append(
+                    _unavailable_group(
+                        f"recorded_action:{sample_id}",
+                        f"Recorded-action metrics failed: {exc}",
+                    )
+                )
+
+        multiview_values: dict[str, Any] = {}
+        if "multiview" in requested:
+            cvoa_reason = (
+                sample_detector_error
+                or detector_reason
+                or ("No local object detector was configured" if detector is None else None)
+            )
+            cvoa_values, cvoa_rows, cvoa_pair_rows = compute_cvoa(
+                sample,
+                sample_id,
+                reference_detections_by_camera if detector is not None else None,
+                generated_detections_by_camera if detector is not None else None,
+                unavailable_reason=cvoa_reason,
+            )
+            cvfc_values, cvfc_rows, cvfc_pair_rows = compute_cvfc(
+                sample,
+                sample_id,
+                cvfc_model,
+                args.cvfc_batch_size,
+                unavailable_reason=cvfc_reason,
+            )
+            multiview_values.update(cvoa_values)
+            multiview_values.update(cvfc_values)
+            multiview_values.update(
+                {
+                    "cross_view_geometry_status": "unavailable",
+                    "cross_view_geometry_reason": (
+                        "No camera calibration or valid cross-view correspondence metadata provided"
+                    ),
+                }
+            )
+            for row in cvoa_rows + cvfc_rows:
+                row["start_frame_index"] = sample.start_frame_index
+                row["fps"] = sample.fps
+            multiview_frame_rows.extend(cvoa_rows)
+            multiview_frame_rows.extend(cvfc_rows)
+            camera_pair_frame_rows.extend(cvoa_pair_rows)
+            camera_pair_frame_rows.extend(cvfc_pair_rows)
 
         sample_metric_rows = _merge_frame_rows(sample_metric_rows)
         for row in sample_metric_rows:
@@ -592,6 +764,8 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 expected_count - len(metric_values)
             )
         interaction.update(action_values)
+        interaction.update(recorded_action_values)
+        interaction.update(multiview_values)
         if "objects" in requested:
             if object_camera_rows:
                 camera_object_statuses = [
@@ -629,10 +803,10 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                             interaction["object_metrics_reason"],
                         )
                     )
-            elif detector_reason:
+            elif tracking_reason or detector_reason:
                 interaction["object_metrics_status"] = "unavailable"
-                interaction["object_metrics_reason"] = detector_reason
-        if "physical" in requested and detector is not None:
+                interaction["object_metrics_reason"] = tracking_reason or detector_reason
+        if "physical" in requested and detector is not None and args.tracker != "none":
             numeric_physical = [
                 row["physical_violation_rate"]
                 for row in physical_camera_rows
@@ -686,6 +860,17 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                         interaction["physical_violation_rate_reason"],
                     )
                 )
+        elif "physical" in requested:
+            physical_reason = tracking_reason or detector_reason or "No local object detector was configured"
+            interaction.update(
+                {
+                    "physical_violation_rate": None,
+                    "physical_violation_rate_status": "unavailable",
+                    "physical_violation_rate_reason": physical_reason,
+                    "physical_violation_candidate_count": 0,
+                    "physical_frame_count": sample.ground_truth.shape[1],
+                }
+            )
         interaction_rows.append(interaction)
 
         if args.save_visualizations:
@@ -723,6 +908,21 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         print(f"[EVALUATED {sample_count}/{len(files)}] {sample.path.name}")
 
     trajectory_rows = aggregate_rows(interaction_rows, ("trajectory_id",))
+    source_frame_metric_names = tuple(
+        (RECORDED_ACTION_METRICS if "action" in requested else ())
+        + ((CVOA_METRICS + CVFC_METRICS) if "multiview" in requested else ())
+    )
+    source_trajectory_rows, source_dataset_metrics = aggregate_unique_source_frame_metrics(
+        recorded_action_frame_rows + multiview_frame_rows,
+        source_frame_metric_names,
+    )
+    source_trajectory_by_id = {
+        str(row.get("trajectory_id")): row for row in source_trajectory_rows
+    }
+    for row in trajectory_rows:
+        source_row = source_trajectory_by_id.get(str(row.get("trajectory_id")))
+        if source_row is not None:
+            row.update(source_row)
     camera_rows = summarize_cameras(frame_rows, FRAME_METRICS)
     camera_ids = {row["camera_index"] for row in camera_rows}
     for camera in sorted(
@@ -812,6 +1012,8 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         if selected
     )
     horizon_summary = horizon_rows(frame_rows, horizon_metric_names)
+    frame_rows.extend(recorded_action_frame_rows)
+    frame_rows.extend(multiview_frame_rows)
     if "fid" in requested:
         if fid_reason is not None:
             fid_status = {
@@ -958,6 +1160,11 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
     config["requested_metrics"] = sorted(requested)
     config["input_paths"] = [str(path.resolve()) for path in files]
     config["run_id"] = run_id
+    cross_view_camera_pair_rows = summarize_camera_pairs(
+        camera_pair_frame_rows, CVOA_METRICS + CVFC_METRICS
+    )
+    aggregated_metrics = dataset_summary(interaction_rows)
+    aggregated_metrics.update(source_dataset_metrics)
     summary = {
         "evaluation_timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "run_id": run_id,
@@ -973,6 +1180,11 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "lpips": any(row.get("lpips") is not None for row in frame_rows),
             "temporal": any(row.get("temporal_difference_error") is not None for row in frame_rows),
             "action": any(row.get("action_data_status") == "available" for row in interaction_rows),
+            "recorded_action": any(
+                row.get(f"{metric}_status") in ("available", "partially_available")
+                for row in interaction_rows
+                for metric in RECORDED_ACTION_METRICS
+            ),
             "objects": any(
                 row.get("object_metrics_status") in ("available", "partially_available")
                 for row in interaction_rows
@@ -984,10 +1196,21 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "fvd": fvd_status["status"] == "available",
             "per_camera": True,
             "cross_view_geometry": False,
+            "cross_view_object_agreement": any(
+                row.get(f"{CVOA_METRICS[0]}_status")
+                in ("available", "partially_available")
+                for row in interaction_rows
+            ),
+            "cross_view_feature_consistency": any(
+                row.get(f"{CVFC_METRICS[3]}_status")
+                in ("available", "partially_available")
+                for row in interaction_rows
+            ),
         },
         "unavailable_metrics": unavailable,
-        "aggregated_metrics": dataset_summary(interaction_rows),
+        "aggregated_metrics": aggregated_metrics,
         "camera_wise_results": camera_rows,
+        "cross_view_camera_pair_results": cross_view_camera_pair_rows,
         "horizon_wise_results": horizon_summary,
         "fid": fid_status,
         "fvd": fvd_status,
@@ -1004,6 +1227,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
                 else "available"
             ),
             "reason": detector_reason,
+            "tracking_reason": tracking_reason,
         },
         "preprocessing": {
             "canonical_layout": "camera,time,height,width,channel",
@@ -1012,11 +1236,18 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
             "resizing": "none",
             "frame_stride": args.frame_stride,
             "action_alignment": "explicit frame_indices; safe contiguous fallback from start_frame_index",
+            "raw_action_alignment": (
+                "raw_index = 3 * source_frame_index; same-row command/observation timing "
+                "semantics are not inferred"
+            ),
         },
         "warnings": [
             "Pixel fidelity is not evidence of physical understanding.",
             "Image-space overlap and flow metrics are not verified 3D physical measurements.",
             "Action-motion correlation is descriptive and is not causal evidence.",
+            "Recorded command/observation consistency is not generated-video action prediction accuracy.",
+            "Cross-view category agreement is limited by detector labels and per-view visibility; it is not object identity or 3D agreement.",
+            "ResNet-50 cross-view feature similarity is a semantic proxy, not geometric correspondence.",
         ],
         "validation_report": validation,
         "invalid_sample_count": sum(item["status"] == "invalid" for item in validation),
@@ -1025,7 +1256,7 @@ def run_evaluation(args: argparse.Namespace) -> tuple[Path, dict[str, Any], int]
         "frames": frame_rows,
         "interactions": interaction_rows,
         "trajectories": trajectory_rows,
-        "cameras": camera_rows,
+        "cameras": camera_rows + cross_view_camera_pair_rows,
         "horizons": horizon_summary,
         "object_summaries": aggregate_object_tracks(object_rows),
         "objects": object_rows,
