@@ -370,9 +370,9 @@ unit tests do not require model loading.
 
 ```powershell
 python -m pip install -r eval/requirements_vlm.txt
-python -m eval.scripts.vlm_success_evaluation `
-  --rollout-dir synthetic_traj/Rollouts_replay_droid_subset `
-  --output-dir eval/results/vlm_success `
+python -m eval.scripts.vlm_success_evaluation \
+  --rollout-dir synthetic_traj/Rollouts_replay_droid_subset \
+  --output-dir eval/results/vlm_success \
   --trajectory-id 18599
 ```
 
