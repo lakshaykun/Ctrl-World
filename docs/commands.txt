@@ -32,6 +32,15 @@ accelerate launch dataset_example/extract_latent.py \
   --svd_path checkpoints/svd \
   --split train
 
+python dataset_example/extract_latent_optimized.py \
+    --droid_hf_path data/droid_1.0.1 \
+    --droid_output_path dataset_example/droid \
+    --svd_path checkpoints/svd \
+    --split train \
+    --vae_batch_size 32 \
+    --resize_batch_size 32 \
+    --profile
+
 python dataset_meta_info/create_meta_info.py \
   --droid_output_path dataset_example/droid \
   --dataset_name droid \
