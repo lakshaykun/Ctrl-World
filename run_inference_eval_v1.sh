@@ -59,7 +59,7 @@ CUDA_VISIBLE_DEVICES=0 python scripts/rollout_replay_traj_new.py \
     --svd_model_path checkpoints/svd \
     --clip_model_path checkpoints/clip \
     --ckpt_path "$CHECKPOINT" \
-    --dynamic_memory_v1 \
+    --dynamic_memory \
     --skip_video
 
 echo
