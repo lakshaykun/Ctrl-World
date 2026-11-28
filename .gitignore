@@ -11,6 +11,7 @@ model_ckpt*
 synthetic_traj/Rollout*
 dataset_example/droid_subset/annotation/val_old*
 dataset_example/droid_new_setup_eval*
+dataset_example/droid
 .vscode
 process.py
 dataset_example/droid
@@ -19,3 +20,6 @@ synthetic_traj/Rollouts_replay_droid
 eval/results/*/*/sample_checkpoints
 eval/results/droid
 eval/weights
+checkpoints
+logs
+data\droid_1.0.1
